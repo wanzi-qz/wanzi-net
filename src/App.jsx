@@ -14,6 +14,7 @@ import {
   contacts,
   capabilities,
   education,
+  heroMeta,
   profile,
   projects,
   strengths,
@@ -169,19 +170,17 @@ function Hero() {
           </div>
         </div>
 
-        <aside className="hero-meta" aria-hidden="true">
-          <div>
-            <span>STATUS</span>
-            <strong>OPEN TO DATA ROLES</strong>
-          </div>
-          <div>
-            <span>EDUCATION</span>
-            <strong>M.S. / IMAGE ALGORITHM</strong>
-          </div>
-          <div>
-            <span>SCROLL</span>
-            <strong>01 / 04</strong>
-          </div>
+        <aside className="hero-meta">
+          {heroMeta.map((item) => (
+            <div key={item.label}>
+              <span>{item.label}</span>
+              <strong>
+                {item.lines.map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
+              </strong>
+            </div>
+          ))}
         </aside>
       </div>
     </section>

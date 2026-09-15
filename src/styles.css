@@ -431,6 +431,10 @@ ul {
   text-transform: uppercase;
 }
 
+.hero-meta strong span {
+  display: block;
+}
+
 .hero-copy > * {
   animation: riseUp 0.9s cubic-bezier(0.2, 0.72, 0.2, 1) both;
 }

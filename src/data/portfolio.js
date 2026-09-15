@@ -10,6 +10,21 @@ export const profile = {
   ],
 };
 
+export const heroMeta = [
+  {
+    label: '教育背景 / EDUCATION',
+    lines: ['数学（本科）', '图像算法（硕士）'],
+  },
+  {
+    label: '核心技能 / TOOLKIT',
+    lines: ['Excel · SQL · Tableau · Python'],
+  },
+  {
+    label: '竞赛荣誉 / AWARDS',
+    lines: ['数学建模国家级奖项 ×2', '华为杯 · 数维杯 国家三等奖'],
+  },
+];
+
 export const capabilities = [
   {
     tool: 'Excel',
