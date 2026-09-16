@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   ArrowDown,
+  ArrowRight,
   ArrowUpRight,
   Check,
   GraduationCap,
@@ -12,14 +14,20 @@ import {
 } from 'lucide-react';
 import {
   contacts,
-  capabilities,
+  advantages,
   education,
   heroMeta,
+  intro,
+  marquee,
+  notes,
   profile,
   projects,
   strengths,
 } from './data/portfolio.js';
 import { ProjectVisual } from './components/ProjectVisuals.jsx';
+import NoteMarkdown from './components/NoteMarkdown.jsx';
+import CommentsSection from './components/CommentSection.jsx';
+import { noteSources } from './content/index.js';
 
 function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null);
@@ -52,6 +60,88 @@ function Reveal({ children, delay = 0, className = '' }) {
   );
 }
 
+function ScrollProgress() {
+  const barRef = useRef(null);
+
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? window.scrollY / max : 0;
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${progress.toFixed(4)})`;
+      }
+    };
+    const onScroll = () => {
+      if (!raf) raf = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <div className="scroll-progress" aria-hidden="true">
+      <span ref={barRef} />
+    </div>
+  );
+}
+
+function useParallax(speed = 0.1) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const rect = node.getBoundingClientRect();
+      const delta = rect.top + rect.height / 2 - window.innerHeight / 2;
+      node.style.transform = `translate3d(0, ${(-delta * speed).toFixed(1)}px, 0)`;
+    };
+    const onScroll = () => {
+      if (!raf) raf = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, [speed]);
+
+  return ref;
+}
+
+function MarqueeBand() {
+  return (
+    <div className="marquee-band" aria-hidden="true">
+      <div className="marquee-track">
+        {[0, 1].map((group) => (
+          <div className="marquee-group" key={group}>
+            {marquee.map((text) => (
+              <span key={text}>
+                <i>{text}</i>
+                <em />
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Nav() {
   const [active, setActive] = useState('');
   const [scrolled, setScrolled] = useState(false);
@@ -59,8 +149,10 @@ function Nav() {
   const links = [
     { id: 'about', label: '关于我', no: '01' },
     { id: 'projects', label: '项目展示', no: '02' },
-    { id: 'strengths', label: '个人优势', no: '03' },
-    { id: 'contact', label: '联系', no: '04' },
+    { id: 'strengths', label: '核心技能', no: '03' },
+    { id: 'notes', label: '学习笔记', no: '04' },
+    { id: 'contact', label: '欢迎联系', no: '05' },
+    { id: 'comments', label: '评论互动', no: '06' },
   ];
 
   useEffect(() => {
@@ -132,21 +224,103 @@ function Nav() {
   );
 }
 
-function Hero() {
+function IntroGate({ onEnter, onGone }) {
+  const [phase, setPhase] = useState(() =>
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'gone'
+      : 'idle',
+  );
+
+  useEffect(() => {
+    if (phase === 'gone') return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== 'gone') return;
+    onEnter();
+    onGone();
+  }, [phase, onEnter, onGone]);
+
+  const enter = () => {
+    if (phase !== 'idle') return;
+    onEnter();
+    setPhase('leaving');
+    window.setTimeout(() => setPhase('gone'), 1500);
+  };
+
+  if (phase === 'gone') return null;
+
   return (
-    <section className="hero" id="home">
+    <div
+      className={`intro-gate ${phase === 'leaving' ? 'is-leaving' : ''}`}
+      aria-hidden={phase === 'leaving'}
+    >
+      <video
+        className="intro-video"
+        src={`${import.meta.env.BASE_URL}videos/hero-loop.mp4`}
+        poster={`${import.meta.env.BASE_URL}images/hero-background.jpg`}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+      />
+      <div className="intro-veil" aria-hidden="true" />
+      <div className="intro-scan" aria-hidden="true" />
+      <div className="intro-bar intro-bar-top" aria-hidden="true" />
+      <div className="intro-bar intro-bar-bottom" aria-hidden="true" />
+
+      <div className="intro-content">
+        <p className="intro-kicker">
+          <span />
+          {intro.kicker}
+          <span />
+        </p>
+        <h1 className="intro-title">
+          <span className="intro-title-line">{intro.titleLines[0]}</span>
+          <span className="intro-title-main">{intro.titleLines[1]}</span>
+        </h1>
+        <p className="intro-tagline">{intro.tagline}</p>
+        <button type="button" className="intro-enter" onClick={enter}>
+          {intro.enter}
+          <ArrowRight size={18} strokeWidth={1.7} />
+        </button>
+      </div>
+
+      <button type="button" className="intro-skip" onClick={enter}>
+        {intro.skip}
+      </button>
+    </div>
+  );
+}
+
+function Hero({ entered = false }) {
+  const shellRef = useParallax(0.05);
+
+  return (
+    <section className={`hero ${entered ? 'is-entered' : ''}`} id="home">
       <div className="hero-image" aria-hidden="true">
-        <img
-          src={`${import.meta.env.BASE_URL}images/hero-background.jpg`}
-          alt=""
-          width="2560"
-          height="1372"
+        <video
+          className="hero-video"
+          src={`${import.meta.env.BASE_URL}videos/hero-loop.mp4`}
+          poster={`${import.meta.env.BASE_URL}images/hero-background.jpg`}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
         />
       </div>
       <div className="hero-shade" aria-hidden="true" />
       <div className="hero-gridline" aria-hidden="true" />
 
-      <div className="shell hero-shell">
+      <div className="shell hero-shell" ref={shellRef}>
         <div className="hero-copy">
           <p className="hero-kicker">
             <span />
@@ -188,14 +362,22 @@ function Hero() {
 }
 
 function SectionHeading({ index, title, en, intro }) {
+  const numRef = useParallax(0.12);
+
   return (
     <Reveal className="section-heading">
-      <div className="heading-index">{index}</div>
+      <div className="heading-index" ref={numRef}>
+        {index}
+      </div>
       <div className="heading-title">
         <p className="eyebrow">
           {en} / {index}
         </p>
-        <h2>{title}</h2>
+        <h2>
+          <span className="mask">
+            <span className="mask-line">{title}</span>
+          </span>
+        </h2>
       </div>
       {intro && <p className="heading-intro">{intro}</p>}
     </Reveal>
@@ -244,6 +426,18 @@ function About() {
               <p className="about-body">{profile.introParagraphs[1]}</p>
             </Reveal>
 
+            <Reveal delay={120} className="advantage-block">
+              <h3>个人优势</h3>
+              <div className="advantage-list">
+                {advantages.map((item) => (
+                  <div className="advantage-item" key={item.title}>
+                    <strong>{item.title}</strong>
+                    <p>{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
             <Reveal delay={140} className="education-block">
               <h3>教育经历</h3>
               <div className="education-list">
@@ -288,18 +482,6 @@ function About() {
           </div>
         </div>
 
-        <Reveal delay={120} className="metric-strip capability-strip">
-          {capabilities.map((capability, index) => (
-            <div className="metric-cell" key={capability.tool}>
-              <span className="metric-index">0{index + 1}</span>
-              <strong>{capability.tool}</strong>
-              <div>
-                <h4>{capability.label}</h4>
-                <p>{capability.detail}</p>
-              </div>
-            </div>
-          ))}
-        </Reveal>
       </div>
     </section>
   );
@@ -368,38 +550,163 @@ function Strengths() {
       <div className="shell">
         <SectionHeading
           index="03"
-          title="个人优势"
-          en="Capabilities"
-          intro="覆盖数据分析常用工具、统计方法、科研数据工程与 AI 辅助协作，能够针对不同问题快速选择合适的方法。"
+          title="核心技能"
+          en="Core Skills"
+          intro="从取数、清洗建模到可视化交付的完整技能链，熟练度经过科研与实战项目验证。"
         />
-        <div className="strength-grid">
-          {strengths.map((item, index) => (
-            <Reveal
-              key={item.no}
-              className="strength-card-wrap"
-              delay={(index % 4) * 60}
-            >
-              <article className="strength-card">
-                <div className="strength-top">
-                  <span>{item.no}</span>
-                  <i>/{String(index + 1).padStart(2, '0')}</i>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-                <div className="strength-tags">
-                  {item.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
+        <Reveal>
+          <div className="skill-field">
+            <i className="field-coord field-coord-1" aria-hidden="true">
+              +31.2304° / 121.4737°
+            </i>
+            <i className="field-coord field-coord-2" aria-hidden="true">
+              -33.8688° / 151.2093°
+            </i>
+            <i className="field-coord field-coord-3" aria-hidden="true">
+              +51.5072° / -0.1276°
+            </i>
+            <span className="field-orb" aria-hidden="true" />
+            {strengths.map((item, index) => (
+              <article key={item.no} className={`skill-node skill-node-${index + 1}`}>
+                <div className="skill-card">
+                  <div className="skill-head">
+                    <span className="skill-no">{item.no}</span>
+                    <i>/{String(index + 1).padStart(2, '0')}</i>
+                  </div>
+                  <h3>{item.title}</h3>
+                  <div className="strength-tags">
+                    {item.tags.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+                  <p>{item.desc}</p>
                 </div>
               </article>
-            </Reveal>
-          ))}
-        </div>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
 
+function NoteModal({ note, onClose }) {
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previous;
+    };
+  }, [onClose]);
+
+  const source = noteSources[note.id] || '';
+
+  return createPortal(
+    <div
+      className="note-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${note.title} 笔记全文`}
+    >
+      <button
+        type="button"
+        className="note-modal-backdrop"
+        aria-label="关闭笔记"
+        onClick={onClose}
+      />
+      <div className="note-modal-panel">
+        <header className="note-modal-head">
+          <div className="note-modal-title">
+            <span>
+              {note.no} / {note.source}
+            </span>
+            <h2>{note.title}</h2>
+          </div>
+          <div className="note-modal-tools">
+            {note.links.map((link) => (
+              <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+                {link.label}
+                <ArrowUpRight size={14} strokeWidth={1.7} />
+              </a>
+            ))}
+            <button
+              type="button"
+              className="note-modal-close"
+              aria-label="关闭"
+              onClick={onClose}
+            >
+              <X size={20} strokeWidth={1.6} />
+            </button>
+          </div>
+        </header>
+        <div className="note-modal-body">
+          <NoteMarkdown source={source} />
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+function Notes() {
+  const [active, setActive] = useState(null);
+
+  return (
+    <section className="section notes" id="notes">
+      <div className="shell">
+        <SectionHeading
+          index="04"
+          title="学习笔记"
+          en="Study Notes"
+          intro="学习过程记录，每一行代码均为手敲。"
+        />
+        <Reveal>
+          <div className="notes-tiles">
+            {notes.map((item, index) => (
+              <div key={item.no} className={`note-tile-wrap note-tile-wrap-${index + 1}`}>
+                <article
+                  className="note-tile"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`打开《${item.title}》笔记全文`}
+                  onClick={() => setActive(item)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      setActive(item);
+                    }
+                  }}
+                >
+                  <img
+                    className="note-cover"
+                    src={`${import.meta.env.BASE_URL}notes/covers/${item.id}.svg`}
+                    alt=""
+                  />
+                  <span className="note-pill">
+                    {item.no} · {item.title}
+                  </span>
+                  <div className="note-tile-foot">
+                    <span>{item.source}</span>
+                    <span className="note-tile-cta">
+                      查看完整笔记
+                      <ArrowUpRight size={14} strokeWidth={1.7} />
+                    </span>
+                  </div>
+                </article>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+      {active && <NoteModal note={active} onClose={() => setActive(null)} />}
+    </section>
+  );
+}
 function ContactFooter() {
   const [copied, setCopied] = useState('');
   const contactIcons = {
@@ -425,10 +732,10 @@ function ContactFooter() {
       </div>
       <div className="shell contact-shell">
         <SectionHeading
-          index="04"
-          title="保持联系"
+          index="05"
+          title="欢迎联系"
           en="Contact"
-          intro="如果你有一个需要数据参与的问题，欢迎把背景和期望讲给我。"
+          intro="一直在不断的学习与进步中，如果有需要，请联系我。"
         />
 
         <div className="contact-channel-list">
@@ -481,6 +788,16 @@ function ContactFooter() {
           })}
         </div>
 
+
+      </div>
+    </footer>
+  );
+}
+
+function SiteFooterBar() {
+  return (
+    <footer className="site-footer-wrap">
+      <div className="shell">
         <div className="site-footer">
           <div>
             <strong>{profile.name}</strong>
@@ -500,16 +817,43 @@ function ContactFooter() {
 }
 
 export default function App() {
+  const [deepLink] = useState(
+    () => typeof window !== 'undefined' && window.location.hash.length > 1,
+  );
+  const [entered, setEntered] = useState(deepLink);
+  const [gateGone, setGateGone] = useState(deepLink);
+
+  useEffect(() => {
+    if (!deepLink) return;
+    const target = document.getElementById(window.location.hash.slice(1));
+    if (!target) return;
+    const previous = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    target.scrollIntoView({ block: 'start' });
+    document.documentElement.style.scrollBehavior = previous;
+  }, [deepLink]);
+
   return (
     <>
+      {!gateGone && (
+        <IntroGate
+          onEnter={() => setEntered(true)}
+          onGone={() => setGateGone(true)}
+        />
+      )}
+      <ScrollProgress />
       <Nav />
       <main>
-        <Hero />
+        <Hero entered={entered} />
+        <MarqueeBand />
         <About />
         <Projects />
         <Strengths />
+        <Notes />
       </main>
       <ContactFooter />
+      <CommentsSection />
+      <SiteFooterBar />
     </>
   );
 }

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-label="Excel cover">
+  <defs>
+    <radialGradient id="glow" cx="72%" cy="26%" r="70%">
+      <stop offset="0%" stop-color="#0f3d2e" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#081019" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bar" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#065f46"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <pattern id="grid" width="46" height="46" patternUnits="userSpaceOnUse">
+      <path d="M46 0H0V46" fill="none" stroke="#ffffff" stroke-opacity="0.055" stroke-width="1"/>
+    </pattern>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="1" fill="#ffffff" fill-opacity="0.03"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="750" fill="#06080c"/>
+  <rect width="1200" height="750" fill="url(#glow)"/>
+  <rect width="1200" height="750" fill="url(#grid)"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#7dd3a8" fill-opacity="0.5" font-size="15" letter-spacing="4">
+    <text x="1140" y="86" text-anchor="end" font-size="18">N.01 // WEEKLY KPI REPORT LAB</text>
+    <text x="1140" y="118" text-anchor="end" font-size="18" fill-opacity="0.28">PIVOT · SLICER · SUMIFS · VLOOKUP</text>
+  </g>
+  <g transform="translate(96 190)">
+    <rect width="560" height="360" rx="10" fill="#0a1118" fill-opacity="0.92" stroke="#34d399" stroke-opacity="0.35"/>
+    <g stroke="#34d399" stroke-opacity="0.22">
+      <path d="M0 60H560M0 120H560M0 180H560M0 240H560M0 300H560"/>
+      <path d="M80 0V360M160 0V360M240 0V360M320 0V360M400 0V360M480 0V360"/>
+    </g>
+    <rect x="0" y="0" width="560" height="60" rx="10" fill="#34d399" fill-opacity="0.12"/>
+    <g fill="#34d399" fill-opacity="0.16">
+      <rect x="160" y="120" width="80" height="60"/>
+      <rect x="240" y="180" width="80" height="60"/>
+      <rect x="320" y="120" width="80" height="120"/>
+    </g>
+    <rect x="240" y="180" width="80" height="60" fill="none" stroke="#34d399" stroke-width="2.5"/>
+    <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="17" fill="#a7f3d0" fill-opacity="0.85">
+      <text x="40" y="38" text-anchor="middle">A</text><text x="120" y="38" text-anchor="middle">B</text><text x="200" y="38" text-anchor="middle">C</text><text x="280" y="38" text-anchor="middle">D</text><text x="360" y="38" text-anchor="middle">E</text><text x="440" y="38" text-anchor="middle">F</text>
+      <text x="200" y="156" text-anchor="middle">GMV</text><text x="280" y="216" text-anchor="middle">UV/PV</text><text x="360" y="186" text-anchor="middle">CPC</text>
+    </g>
+  </g>
+  <g transform="translate(720 170)">
+    <rect x="0" y="210" width="46" height="120" rx="6" fill="url(#bar)"/>
+    <rect x="66" y="150" width="46" height="180" rx="6" fill="url(#bar)" fill-opacity="0.85"/>
+    <rect x="132" y="90" width="46" height="240" rx="6" fill="url(#bar)"/>
+    <rect x="198" y="170" width="46" height="160" rx="6" fill="url(#bar)" fill-opacity="0.85"/>
+    <rect x="264" y="40" width="46" height="290" rx="6" fill="url(#bar)"/>
+    <path d="M0 200 L66 140 L132 80 L198 160 L264 30" fill="none" stroke="#e7fff4" stroke-opacity="0.75" stroke-width="3" stroke-linecap="round"/>
+    <g fill="#e7fff4">
+      <circle cx="0" cy="200" r="6"/><circle cx="132" cy="80" r="6"/><circle cx="264" cy="30" r="6"/>
+    </g>
+  </g>
+  <g transform="translate(340 570)">
+    <rect width="520" height="52" rx="26" fill="#0a1118" stroke="#34d399" stroke-opacity="0.45"/>
+    <text x="260" y="33" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="19" fill="#6ee7b7">=SUMIFS(GMV, DATE, "&gt;="&amp;EDATE(TODAY(),-1))</text>
+  </g>
+  <rect width="1200" height="750" fill="url(#scan)"/>
+  <g stroke="#34d399" stroke-opacity="0.6" stroke-width="2">
+    <path d="M40 40h26M40 40v26M1160 40h-26M1160 40v26M40 710h26M40 710v-26M1160 710h-26M1160 710v-26"/>
+  </g>
+</svg>

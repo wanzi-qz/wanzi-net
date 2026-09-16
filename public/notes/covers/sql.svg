@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-label="SQL cover">
+  <defs>
+    <radialGradient id="glow2" cx="30%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#0b3550" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#081019" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cyl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.12"/>
+    </linearGradient>
+    <pattern id="grid2" width="46" height="46" patternUnits="userSpaceOnUse">
+      <path d="M46 0H0V46" fill="none" stroke="#ffffff" stroke-opacity="0.055" stroke-width="1"/>
+    </pattern>
+    <pattern id="scan2" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="1" fill="#ffffff" fill-opacity="0.03"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="750" fill="#06080c"/>
+  <rect width="1200" height="750" fill="url(#glow2)"/>
+  <rect width="1200" height="750" fill="url(#grid2)"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#7dd3f8" fill-opacity="0.5" font-size="15" letter-spacing="4">
+    <text x="1140" y="86" text-anchor="end" font-size="18">N.02 // SQL FROM ZERO TO WINDOW()</text>
+    <text x="1140" y="118" text-anchor="end" font-size="18" fill-opacity="0.28">JOIN · GROUP BY · HAVING · OVER</text>
+  </g>
+  <g transform="translate(90 180)">
+    <rect width="640" height="420" rx="12" fill="#0a1118" fill-opacity="0.94" stroke="#38bdf8" stroke-opacity="0.35"/>
+    <rect width="640" height="52" rx="12" fill="#38bdf8" fill-opacity="0.1"/>
+    <circle cx="30" cy="26" r="7" fill="#f87171"/><circle cx="56" cy="26" r="7" fill="#fbbf24"/><circle cx="82" cy="26" r="7" fill="#34d399"/>
+    <text x="112" y="32" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="16" fill="#7dd3f8" fill-opacity="0.7">mysql&gt; query.sql</text>
+    <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="21">
+      <text x="34" y="104" fill="#e2f4ff" fill-opacity="0.9"><tspan fill="#38bdf8">SELECT</tspan> city, <tspan fill="#38bdf8">COUNT</tspan>(*) <tspan fill="#38bdf8">AS</tspan> orders</text>
+      <text x="34" y="146" fill="#e2f4ff" fill-opacity="0.9"><tspan fill="#38bdf8">FROM</tspan> sales</text>
+      <text x="34" y="188" fill="#e2f4ff" fill-opacity="0.9"><tspan fill="#38bdf8">WHERE</tspan> amount <tspan fill="#38bdf8">BETWEEN</tspan> <tspan fill="#fbbf24">100</tspan> <tspan fill="#38bdf8">AND</tspan> <tspan fill="#fbbf24">999</tspan></text>
+      <text x="34" y="230" fill="#e2f4ff" fill-opacity="0.9"><tspan fill="#38bdf8">GROUP BY</tspan> city</text>
+      <text x="34" y="272" fill="#e2f4ff" fill-opacity="0.9"><tspan fill="#38bdf8">HAVING</tspan> <tspan fill="#38bdf8">COUNT</tspan>(*) &gt; <tspan fill="#fbbf24">5</tspan></text>
+      <text x="34" y="314" fill="#e2f4ff" fill-opacity="0.9"><tspan fill="#38bdf8">ORDER BY</tspan> orders <tspan fill="#38bdf8">DESC</tspan> <tspan fill="#38bdf8">LIMIT</tspan> <tspan fill="#fbbf24">10</tspan>;</text>
+      <text x="34" y="368" fill="#34d399" fill-opacity="0.85">10 rows in 0.042 sec</text>
+      <rect x="34" y="384" width="14" height="24" fill="#38bdf8" fill-opacity="0.85"/>
+    </g>
+  </g>
+  <g transform="translate(850 220)">
+    <ellipse cx="130" cy="30" rx="130" ry="34" fill="url(#cyl)" stroke="#38bdf8" stroke-opacity="0.6"/>
+    <path d="M0 30v90a130 34 0 0 0 260 0V30" fill="url(#cyl)" stroke="#38bdf8" stroke-opacity="0.45"/>
+    <path d="M0 120v90a130 34 0 0 0 260 0v-90" fill="url(#cyl)" stroke="#38bdf8" stroke-opacity="0.45"/>
+    <path d="M0 210v90a130 34 0 0 0 260 0v-90" fill="url(#cyl)" stroke="#38bdf8" stroke-opacity="0.45"/>
+    <ellipse cx="130" cy="30" rx="130" ry="34" fill="none" stroke="#e0f2fe" stroke-opacity="0.5"/>
+  </g>
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="15" fill="#7dd3f8" fill-opacity="0.45">
+    <text x="850" y="580">OVER (PARTITION BY city</text>
+    <text x="880" y="608">ORDER BY amount DESC)</text>
+  </g>
+  <rect width="1200" height="750" fill="url(#scan2)"/>
+  <g stroke="#38bdf8" stroke-opacity="0.6" stroke-width="2">
+    <path d="M40 40h26M40 40v26M1160 40h-26M1160 40v26M40 710h26M40 710v-26M1160 710h-26M1160 710v-26"/>
+  </g>
+</svg>

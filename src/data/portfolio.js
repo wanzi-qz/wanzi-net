@@ -10,6 +10,27 @@ export const profile = {
   ],
 };
 
+export const intro = {
+  kicker: 'WANG JIARUI · DATA ANALYST · 2026',
+  titleLines: ['欢迎来到', '我的世界'],
+  tagline: '一个用数据、代码和好奇心搭起来的小世界。深呼吸，点一下，走进来。',
+  enter: '进入我的世界',
+  skip: '跳过 SKIP',
+};
+
+export const marquee = [
+  '数据分析',
+  'DATA ANALYSIS',
+  '可视化',
+  'VISUALIZATION',
+  'SQL',
+  'EXCEL',
+  'PYTHON',
+  'TABLEAU',
+  '统计建模',
+  'STATISTICAL MODELING',
+];
+
 export const heroMeta = [
   {
     label: '教育背景 / EDUCATION',
@@ -25,26 +46,26 @@ export const heroMeta = [
   },
 ];
 
-export const capabilities = [
+export const advantages = [
   {
-    tool: 'Excel',
-    label: '数据处理与分析',
-    detail: '高效完成数据清洗、透视分析、函数计算与图表表达。',
+    title: '数理统计科班 + 图像算法硕士',
+    desc:
+      '电子科技大学数学（应用统计方向）本科、华南师范大学控制工程硕士，概率统计、假设检验、回归与聚类基础扎实；3 次以队长身份参加数学建模竞赛并全部获奖。',
   },
   {
-    tool: 'Tableau',
-    label: '可视化与看板',
-    detail: '把分析结论转化为可交互看板，清晰呈现趋势与关键指标。',
+    title: '独立跑通数据分析全流程',
+    desc:
+      '从需求拆解、SQL 取数、Python / Excel 清洗建模到 Tableau 看板与业务结论；处理过 4,400+ 条订单明细与 2,300+ 条门店日报，独立交付交互式经营看板。',
   },
   {
-    tool: 'SQL',
-    label: '查询与取数',
-    detail: '掌握多表关联、窗口函数与聚合统计，按口径提取分析数据。',
+    title: '工程化 + AI 提效',
+    desc:
+      '熟练 Python（pandas / NumPy / scikit-learn），用脚本与 GUI 沉淀分析流程，将硕士课题单次分析耗时从数小时压缩至分钟级；熟悉 Prompt Engineering 与 Agent 工作流。',
   },
   {
-    tool: 'Python',
-    label: '建模与自动化',
-    detail: '使用 Pandas、Matplotlib 与机器学习方法完成自动化分析。',
+    title: '沟通与交付',
+    desc:
+      '擅长把分析结论翻译成非技术角色能听懂的图表与报告；硕士课题成果沉淀为 GUI 分析工具并在课题组内推广使用。',
   },
 ];
 
@@ -147,26 +168,108 @@ export const projects = [
 export const strengths = [
   {
     no: '01',
-    title: 'Excel 数据分析',
-    desc: '熟练处理表格数据，完成清洗、透视、函数与图表分析，支持日常业务快速决策。',
-    tags: ['数据清洗', '透视表', '函数与图表'],
-  },
-  {
-    no: '02',
-    title: 'Tableau 可视化',
-    desc: '能够搭建交互看板，将复杂数据转化为直观的趋势、构成与关键指标表达。',
-    tags: ['交互看板', '指标呈现', '数据探索'],
-  },
-  {
-    no: '03',
-    title: 'SQL 查询取数',
+    title: 'SQL 数据查询',
     desc: '掌握多表关联与窗口函数，能够按分析口径完成查询、聚合与结果校验。',
     tags: ['多表关联', '窗口函数', '聚合统计'],
   },
   {
+    no: '02',
+    title: 'Python 数据分析',
+    desc: '使用 Python 生态完成数据清洗、可视化和基础机器学习，沉淀可复用分析流程。',
+    tags: ['Pandas', 'NumPy', 'Scikit-learn'],
+  },
+  {
+    no: '03',
+    title: 'Excel / BI 报表',
+    desc: '高效完成数据清洗、透视分析、函数计算与图表表达，支持日常业务快速决策。',
+    tags: ['数据清洗', '透视表', '函数与图表'],
+  },
+  {
     no: '04',
-    title: 'Python 分析建模',
-    desc: '使用 Python 生态完成数据整理、可视化和基础机器学习，沉淀可复用分析流程。',
-    tags: ['Pandas', 'Matplotlib', 'SciKit-learn'],
+    title: '统计分析与建模',
+    desc: '扎实掌握假设检验、回归与聚类方法，能够完成高维特征筛选、降维与差异显著性验证。',
+    tags: ['假设检验', '回归分析', 'PCA 降维'],
+  },
+  {
+    no: '05',
+    title: 'Tableau 可视化',
+    desc: '能够搭建交互看板，将复杂数据转化为直观的趋势、构成与关键指标表达。',
+    tags: ['交互看板', '指标呈现', '联动筛选'],
+  },
+  {
+    no: '06',
+    title: 'AI 工具应用',
+    desc: '熟悉 Prompt Engineering 与 Agent 工作流，用 AI 辅助分析并将重复流程沉淀为可复用工具。',
+    tags: ['Prompt Engineering', 'Agent 工作流', '流程沉淀'],
+  },
+];
+
+export const notes = [
+  {
+    no: 'N.01',
+    id: 'excel',
+    title: 'Excel 报表搭建',
+    source: 'OBSIDIAN / 数据分析',
+    summary:
+      '跟着课程把 Excel 报表开发完整走了一遍，从看懂业务指标，到函数取数，最后做成一份能筛选、能直接看的周报。',
+    points: [
+      '业务口径：GMV、UV / PV、CPC、到手率、进店与下单转化率',
+      '数据透视表 + 切片器 + 数据透视图，实现跨表联动筛选',
+      '常用函数：SUMIF / SUMIFS、IF + AND、VLOOKUP、INDEX + MATCH、SUBTOTAL',
+      '同比环比：YEAR / MONTH / DATE / EDATE / EOMONTH 拼出各种日期口径',
+      '周报开发：指标体系 + 下拉筛选 + 条件格式（数据条 / 图标集）做可视化',
+    ],
+    links: [
+      {
+        label: '课程视频 · B站',
+        href: 'https://www.bilibili.com/video/BV1ZM4y1u7uF?p=15',
+      },
+    ],
+  },
+  {
+    no: 'N.02',
+    id: 'sql',
+    title: 'SQL 从入门到窗口函数',
+    source: 'OBSIDIAN / 数据分析',
+    summary:
+      '把 SQL 的语法结构和真实运行顺序捋清楚，再从单表查询走到多表连接、子查询和窗口函数，最后自己搭了一套云端 MySQL 随时练手。',
+    points: [
+      '书写顺序 SELECT-FROM-WHERE-GROUP BY-HAVING-ORDER BY-LIMIT，运行却是 FROM 先走、SELECT 最后',
+      '条件筛选：LIKE、BETWEEN、IN、NULL 判断与操作符混合使用',
+      '聚合分组：COUNT / SUM / AVG 配 GROUP BY，分清 WHERE 与 HAVING',
+      '高级语句：窗口函数、表连接（inner / left / right）、子查询',
+      '自建云端 MySQL，用 DataGrip 连真实业务表练查询',
+    ],
+    links: [
+      {
+        label: '课程视频 · B站戴师兄',
+        href: 'https://www.bilibili.com/video/BV1ZM4y1u7uF?p=6',
+      },
+      {
+        label: 'SQLZoo 练习',
+        href: 'https://sqlzoo.net/wiki/SELECT_basics',
+      },
+    ],
+  },
+  {
+    no: 'N.03',
+    id: 'sql-nowcoder',
+    title: 'SQL 刷题 · 牛客 42 题',
+    source: 'OBSIDIAN / 数据分析',
+    summary:
+      '在牛客网 SQL 必知必会题库把 SQL1 到 SQL42 刷完，每题都记了思路和踩过的坑，还整理出一份需要二刷的题目清单。',
+    points: [
+      '基础查询：distinct 去重、limit、多列排序、字段重命名',
+      '多表 join + 分组统计，count(distinct ...) 与 round(..., 4) 控制精度',
+      'union all 合并结果集，case when 做年龄段分桶和自定义字段',
+      '日期函数 day() / month() 提取，算 8 月每日练题量与次日留存率',
+      '二刷清单：SQL21、22、25、26、27、29、32',
+    ],
+    links: [
+      {
+        label: '牛客 SQL 题库',
+        href: 'https://www.nowcoder.com/exam/oj?page=1&tab=SQL%E7%AF%87&topicId=199',
+      },
+    ],
   },
 ];
