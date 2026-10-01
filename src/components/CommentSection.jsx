@@ -384,9 +384,9 @@ export default function CommentsSection() {
     <section className="section comments" id="comments">
       <div className="shell">
         <Reveal className="section-heading">
-          <div className="heading-index">06</div>
+          <div className="heading-index">07</div>
           <div className="heading-title">
-            <p className="eyebrow">Comments / 06</p>
+            <p className="eyebrow">Comments / 07</p>
             <h2>
               <span className="mask">
                 <span className="mask-line">评论互动</span>

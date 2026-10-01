@@ -4,6 +4,7 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
+  Award,
   Check,
   GraduationCap,
   Mail,
@@ -28,6 +29,7 @@ import { ProjectVisual } from './components/ProjectVisuals.jsx';
 import NoteMarkdown from './components/NoteMarkdown.jsx';
 import CommentsSection from './components/CommentSection.jsx';
 import { noteSources } from './content/index.js';
+import { certs, certCats } from './content/certs.js';
 
 function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null);
@@ -151,8 +153,9 @@ function Nav() {
     { id: 'projects', label: '项目展示', no: '02' },
     { id: 'strengths', label: '核心技能', no: '03' },
     { id: 'notes', label: '学习笔记', no: '04' },
-    { id: 'contact', label: '欢迎联系', no: '05' },
-    { id: 'comments', label: '评论互动', no: '06' },
+    { id: 'certs', label: '证书荣誉', no: '05' },
+    { id: 'contact', label: '欢迎联系', no: '06' },
+    { id: 'comments', label: '评论互动', no: '07' },
   ];
 
   useEffect(() => {
@@ -707,6 +710,156 @@ function Notes() {
     </section>
   );
 }
+function CertLightbox({ cert, onClose, onStep }) {
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === 'Escape') onClose();
+      if (event.key === 'ArrowRight') onStep(1);
+      if (event.key === 'ArrowLeft') onStep(-1);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose, onStep]);
+
+  return createPortal(
+    <div className="cert-lightbox" role="dialog" aria-modal="true" aria-label={cert.title}>
+      <button type="button" className="cert-lightbox-backdrop" aria-label="关闭大图" onClick={onClose} />
+      <figure className="cert-lightbox-figure">
+        <img src={`${import.meta.env.BASE_URL}${cert.img}`} alt={cert.title} />
+        <figcaption>
+          <strong>{cert.title}</strong>
+          <span>
+            {cert.org} · {cert.date}
+          </span>
+        </figcaption>
+      </figure>
+      <button type="button" className="cert-lightbox-nav prev" aria-label="上一张" onClick={() => onStep(-1)}>
+        ‹
+      </button>
+      <button type="button" className="cert-lightbox-nav next" aria-label="下一张" onClick={() => onStep(1)}>
+        ›
+      </button>
+      <button type="button" className="cert-lightbox-close" aria-label="关闭" onClick={onClose}>
+        <X size={20} strokeWidth={1.6} />
+      </button>
+    </div>,
+    document.body,
+  );
+}
+
+function CertModal({ onClose }) {
+  const [zoom, setZoom] = useState(null);
+  const zoomRef = useRef(null);
+  zoomRef.current = zoom;
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === 'Escape' && !zoomRef.current) onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previous;
+    };
+  }, [onClose]);
+
+  const step = (dir) => {
+    const idx = certs.findIndex((item) => item.id === zoom.id);
+    setZoom(certs[(idx + dir + certs.length) % certs.length]);
+  };
+
+  return createPortal(
+    <div className="cert-modal" role="dialog" aria-modal="true" aria-label="证书荣誉">
+      <button type="button" className="cert-modal-backdrop" aria-label="关闭证书墙" onClick={onClose} />
+      <div className="cert-modal-panel">
+        <header className="cert-modal-head">
+          <div>
+            <span>共 {certs.length} 张 · 点击卡片放大</span>
+            <h2>证书荣誉</h2>
+          </div>
+          <button type="button" className="cert-modal-close" aria-label="关闭" onClick={onClose}>
+            <X size={20} strokeWidth={1.6} />
+          </button>
+        </header>
+        <div className="cert-modal-body">
+          {certCats.map((cat) => (
+            <section className="cert-group" key={cat.id}>
+              <h3>
+                <Award size={15} strokeWidth={1.8} className="cert-group-icon" />
+                {cat.label}
+                <span>{certs.filter((item) => item.cat === cat.id).length}</span>
+              </h3>
+              <div className="cert-grid">
+                {certs
+                  .filter((item) => item.cat === cat.id)
+                  .map((item) => (
+                    <button type="button" key={item.id} className="cert-card" onClick={() => setZoom(item)}>
+                      <img src={`${import.meta.env.BASE_URL}${item.img}`} alt={item.title} loading="lazy" />
+                      <span className="cert-shine" aria-hidden="true" />
+                      <span className="cert-card-info">
+                        <strong>{item.title}</strong>
+                        <small>
+                          {item.org} · {item.date}
+                        </small>
+                      </span>
+                    </button>
+                  ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
+      {zoom && <CertLightbox cert={zoom} onClose={() => setZoom(null)} onStep={step} />}
+    </div>,
+    document.body,
+  );
+}
+
+function Certs() {
+  const [open, setOpen] = useState(false);
+  const awards = certs.filter((item) => item.cat === 'awards');
+
+  return (
+    <section className="section certs" id="certs">
+      <div className="shell">
+        <SectionHeading
+          index="05"
+          title="证书荣誉"
+          en="Certificates"
+          intro="也曾得过一些奖"
+        />
+        <Reveal>
+          <button type="button" className="certs-entry" onClick={() => setOpen(true)} aria-label="打开证书墙">
+            <span className="certs-fan" aria-hidden="true">
+              {certs.slice(0, 4).map((item, index) => (
+                <img
+                  key={item.id}
+                  className={`certs-fan-img fan-${index + 1}`}
+                  src={`${import.meta.env.BASE_URL}${item.img}`}
+                  alt=""
+                />
+              ))}
+            </span>
+            <span className="certs-entry-info">
+              <span className="certs-count">{certs.length} 张证书已存档</span>
+              <strong>
+                竞赛获奖 {awards.length} 项 · 数学建模 / 创新创业
+              </strong>
+              <span className="certs-cta">
+                查看全部证书
+                <ArrowRight size={15} strokeWidth={1.8} />
+              </span>
+            </span>
+          </button>
+        </Reveal>
+      </div>
+      {open && <CertModal onClose={() => setOpen(false)} />}
+    </section>
+  );
+}
+
 function ContactFooter() {
   const [copied, setCopied] = useState('');
   const contactIcons = {
@@ -732,7 +885,7 @@ function ContactFooter() {
       </div>
       <div className="shell contact-shell">
         <SectionHeading
-          index="05"
+          index="06"
           title="欢迎联系"
           en="Contact"
           intro="一直在不断的学习与进步中，如果有需要，请联系我。"
@@ -850,6 +1003,7 @@ export default function App() {
         <Projects />
         <Strengths />
         <Notes />
+      <Certs />
       </main>
       <ContactFooter />
       <CommentsSection />
