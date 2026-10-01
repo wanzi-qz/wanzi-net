@@ -11,6 +11,8 @@ import {
   Menu,
   MessageCircle,
   Phone,
+  Volume2,
+  VolumeX,
   X,
 } from 'lucide-react';
 import {
@@ -975,6 +977,48 @@ export default function App() {
   );
   const [entered, setEntered] = useState(deepLink);
   const [gateGone, setGateGone] = useState(deepLink);
+  const bgmRef = useRef(null);
+  const [bgmOn, setBgmOn] = useState(false);
+  const bgmStarted = useRef(false);
+  const prevEntered = useRef(entered);
+
+  useEffect(() => {
+    const was = prevEntered.current;
+    prevEntered.current = entered;
+    if (!entered || was || bgmStarted.current) return;
+    bgmStarted.current = true;
+    const audio = bgmRef.current;
+    if (!audio) return;
+    audio.volume = 0;
+    audio
+      .play()
+      .then(() => {
+        setBgmOn(true);
+        const fade = window.setInterval(() => {
+          if (audio.volume < 0.45) audio.volume = Math.min(0.5, audio.volume + 0.05);
+          else window.clearInterval(fade);
+        }, 120);
+      })
+      .catch(() => {
+        bgmStarted.current = false;
+      });
+  }, [entered]);
+
+  const toggleBgm = () => {
+    const audio = bgmRef.current;
+    if (!audio) return;
+    if (audio.paused) {
+      bgmStarted.current = true;
+      audio.volume = 0.5;
+      audio
+        .play()
+        .then(() => setBgmOn(true))
+        .catch(() => setBgmOn(false));
+    } else {
+      audio.pause();
+      setBgmOn(false);
+    }
+  };
 
   useEffect(() => {
     if (!deepLink) return;
@@ -1008,6 +1052,21 @@ export default function App() {
       <ContactFooter />
       <CommentsSection />
       <SiteFooterBar />
+      <audio
+        ref={bgmRef}
+        src={`${import.meta.env.BASE_URL}audio/intro-bgm.wav`}
+        loop
+        preload="auto"
+      />
+      <button
+        type="button"
+        className={`bgm-toggle ${bgmOn ? 'is-on' : ''}`}
+        onClick={toggleBgm}
+        aria-label={bgmOn ? '暂停背景音乐' : '播放背景音乐'}
+        title={bgmOn ? '暂停背景音乐' : '播放背景音乐'}
+      >
+        {bgmOn ? <Volume2 size={18} strokeWidth={1.7} /> : <VolumeX size={18} strokeWidth={1.7} />}
+      </button>
     </>
   );
 }
