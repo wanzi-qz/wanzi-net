@@ -153,7 +153,7 @@ export function ToolkitVisual() {
         </div>
       </div>
       <div className="art-bottomline">
-        <span>SQL / PYTHON / TABLEAU</span>
+        <span>PYTHON / OPENCV / MATLAB</span>
         <span>REUSABLE</span>
       </div>
     </ArtChrome>

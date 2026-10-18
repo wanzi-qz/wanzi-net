@@ -329,7 +329,7 @@ function Hero({ entered = false }) {
         <div className="hero-copy">
           <p className="hero-kicker">
             <span />
-            数据分析师 / PORTFOLIO 2026
+            算法工程师 · 计算机视觉 / PORTFOLIO 2026
             <span />
           </p>
           <h1>
@@ -397,7 +397,7 @@ function About() {
           index="01"
           title="关于我"
           en="About"
-          intro="从基础学科进入真实数据场景，习惯用可复现的方法处理问题，并把结论交付给需要做决定的人。"
+          intro="从数学与统计进入图像算法场景，习惯用可复现的方法解决问题，并把结论交付给需要做决定的人。"
         />
 
         <div className="about-grid">
@@ -537,7 +537,7 @@ function Projects() {
           index="02"
           title="项目展示"
           en="Featured Work"
-          intro="以科研数据项目为主线，兼顾建模竞赛与方法沉淀，展示从问题拆解到结论交付的完整路径。"
+          intro="以科研图像算法项目为主线，兼顾数学建模与工具链沉淀，展示从问题拆解到算法落地的完整路径。"
         />
         <ProjectCard item={projects[0]} primary />
         <div className="project-grid-secondary">
@@ -557,7 +557,7 @@ function Strengths() {
           index="03"
           title="核心技能"
           en="Core Skills"
-          intro="从取数、清洗建模到可视化交付的完整技能链，熟练度经过科研与实战项目验证。"
+          intro="从图像处理、模型训练到特征工程与统计验证的完整算法能力链，均在科研项目中实际跑通。"
         />
         <Reveal>
           <div className="skill-field">
@@ -609,7 +609,15 @@ function NoteModal({ note, onClose }) {
     };
   }, [onClose]);
 
-  const source = noteSources[note.id] || '';
+  const parts = note.parts && note.parts.length > 1 ? note.parts : null;
+  const [activePart, setActivePart] = useState(parts ? parts[0].id : note.id);
+  const bodyRef = useRef(null);
+  const source = noteSources[activePart] || noteSources[note.id] || '';
+
+  const selectPart = (id) => {
+    setActivePart(id);
+    if (bodyRef.current) bodyRef.current.scrollTop = 0;
+  };
 
   return createPortal(
     <div
@@ -649,7 +657,29 @@ function NoteModal({ note, onClose }) {
             </button>
           </div>
         </header>
-        <div className="note-modal-body">
+        {parts && (
+          <div className="note-modal-tabs" role="tablist" aria-label="笔记分篇">
+            {parts.map((part) => (
+              <button
+                key={part.id}
+                type="button"
+                role="tab"
+                id={`note-tab-${part.id}`}
+                aria-selected={activePart === part.id}
+                className={`note-modal-tab ${activePart === part.id ? 'is-active' : ''}`}
+                onClick={() => selectPart(part.id)}
+              >
+                {part.label}
+              </button>
+            ))}
+          </div>
+        )}
+        <div
+          className="note-modal-body"
+          ref={bodyRef}
+          role={parts ? 'tabpanel' : undefined}
+          aria-labelledby={parts ? `note-tab-${activePart}` : undefined}
+        >
           <NoteMarkdown source={source} />
         </div>
       </div>
