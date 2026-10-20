@@ -4,8 +4,9 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
-  Award,
   Check,
+  ChevronLeft,
+  ChevronRight,
   GraduationCap,
   Mail,
   Menu,
@@ -31,7 +32,7 @@ import { ProjectVisual } from './components/ProjectVisuals.jsx';
 import NoteMarkdown from './components/NoteMarkdown.jsx';
 import CommentsSection from './components/CommentSection.jsx';
 import { noteSources } from './content/index.js';
-import { certs, certCats } from './content/certs.js';
+import { certs } from './content/certs.js';
 
 function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null);
@@ -154,8 +155,8 @@ function Nav() {
     { id: 'about', label: '关于我', no: '01' },
     { id: 'projects', label: '项目展示', no: '02' },
     { id: 'strengths', label: '核心技能', no: '03' },
-    { id: 'notes', label: '学习笔记', no: '04' },
-    { id: 'certs', label: '证书荣誉', no: '05' },
+    { id: 'certs', label: '证书荣誉', no: '04' },
+    { id: 'notes', label: '学习笔记', no: '05' },
     { id: 'contact', label: '欢迎联系', no: '06' },
     { id: 'comments', label: '评论互动', no: '07' },
   ];
@@ -496,7 +497,7 @@ function ProjectCard({ item, primary = false }) {
   return (
     <Reveal className={primary ? 'project-card-wrap' : 'project-card-wrap compact'}>
       <article className={`project-card ${primary ? 'project-card-primary' : 'project-card-compact'}`}>
-        <ProjectVisual type={item.visual} image={item.image} />
+        <ProjectVisual type={item.visual} image={item.image} pipeline={item.pipeline} />
         <div className="project-body">
           <div className="project-meta">
             <span>{item.no}</span>
@@ -537,12 +538,11 @@ function Projects() {
           index="02"
           title="项目展示"
           en="Featured Work"
-          intro="以科研图像算法项目为主线，兼顾数学建模与工具链沉淀，展示从问题拆解到算法落地的完整路径。"
+          intro="以科研图像算法项目为主线，兼顾个人工具链沉淀，展示从问题拆解到算法落地的完整路径。"
         />
         <ProjectCard item={projects[0]} primary />
         <div className="project-grid-secondary">
           <ProjectCard item={projects[1]} />
-          <ProjectCard item={projects[2]} />
         </div>
       </div>
     </section>
@@ -695,7 +695,7 @@ function Notes() {
     <section className="section notes" id="notes">
       <div className="shell">
         <SectionHeading
-          index="04"
+          index="05"
           title="学习笔记"
           en="Study Notes"
           intro="学习过程记录，每一行代码均为手敲。"
@@ -779,115 +779,116 @@ function CertLightbox({ cert, onClose, onStep }) {
   );
 }
 
-function CertModal({ onClose }) {
+function Certs() {
+  const railRef = useRef(null);
   const [zoom, setZoom] = useState(null);
-  const zoomRef = useRef(null);
-  zoomRef.current = zoom;
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(true);
+  const drag = useRef({ active: false, startX: 0, startScroll: 0, moved: 0 });
 
-  useEffect(() => {
-    const onKey = (event) => {
-      if (event.key === 'Escape' && !zoomRef.current) onClose();
-    };
-    document.addEventListener('keydown', onKey);
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = previous;
-    };
-  }, [onClose]);
-
-  const step = (dir) => {
-    const idx = certs.findIndex((item) => item.id === zoom.id);
-    setZoom(certs[(idx + dir + certs.length) % certs.length]);
+  const syncArrows = () => {
+    const el = railRef.current;
+    if (!el) return;
+    setCanPrev(el.scrollLeft > 4);
+    setCanNext(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
   };
 
-  return createPortal(
-    <div className="cert-modal" role="dialog" aria-modal="true" aria-label="证书荣誉">
-      <button type="button" className="cert-modal-backdrop" aria-label="关闭证书墙" onClick={onClose} />
-      <div className="cert-modal-panel">
-        <header className="cert-modal-head">
-          <div>
-            <span>共 {certs.length} 张 · 点击卡片放大</span>
-            <h2>证书荣誉</h2>
-          </div>
-          <button type="button" className="cert-modal-close" aria-label="关闭" onClick={onClose}>
-            <X size={20} strokeWidth={1.6} />
-          </button>
-        </header>
-        <div className="cert-modal-body">
-          {certCats.map((cat) => (
-            <section className="cert-group" key={cat.id}>
-              <h3>
-                <Award size={15} strokeWidth={1.8} className="cert-group-icon" />
-                {cat.label}
-                <span>{certs.filter((item) => item.cat === cat.id).length}</span>
-              </h3>
-              <div className="cert-grid">
-                {certs
-                  .filter((item) => item.cat === cat.id)
-                  .map((item) => (
-                    <button type="button" key={item.id} className="cert-card" onClick={() => setZoom(item)}>
-                      <img src={`${import.meta.env.BASE_URL}${item.img}`} alt={item.title} loading="lazy" />
-                      <span className="cert-shine" aria-hidden="true" />
-                      <span className="cert-card-info">
-                        <strong>{item.title}</strong>
-                        <small>
-                          {item.org} · {item.date}
-                        </small>
-                      </span>
-                    </button>
-                  ))}
-              </div>
-            </section>
-          ))}
-        </div>
-      </div>
-      {zoom && <CertLightbox cert={zoom} onClose={() => setZoom(null)} onStep={step} />}
-    </div>,
-    document.body,
-  );
-}
+  useEffect(() => {
+    syncArrows();
+  }, []);
 
-function Certs() {
-  const [open, setOpen] = useState(false);
-  const awards = certs.filter((item) => item.cat === 'awards');
+  const stepBy = (dir) => {
+    const el = railRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.72, behavior: 'smooth' });
+  };
+
+  const onPointerDown = (event) => {
+    if (event.pointerType !== 'mouse') return;
+    const el = railRef.current;
+    drag.current = { active: true, startX: event.clientX, startScroll: el.scrollLeft, moved: 0 };
+    el.classList.add('is-dragging');
+  };
+
+  const onPointerMove = (event) => {
+    if (!drag.current.active) return;
+    const el = railRef.current;
+    const dx = event.clientX - drag.current.startX;
+    drag.current.moved = Math.max(drag.current.moved, Math.abs(dx));
+    el.scrollLeft = drag.current.startScroll - dx;
+  };
+
+  const endDrag = () => {
+    drag.current.active = false;
+    railRef.current?.classList.remove('is-dragging');
+  };
+
+  const zoomIdx = zoom ? certs.findIndex((item) => item.id === zoom.id) : -1;
+  const stepZoom = (dir) => setZoom(certs[(zoomIdx + dir + certs.length) % certs.length]);
 
   return (
     <section className="section certs" id="certs">
       <div className="shell">
         <SectionHeading
-          index="05"
+          index="04"
           title="证书荣誉"
           en="Certificates"
           intro="也曾得过一些奖"
         />
         <Reveal>
-          <button type="button" className="certs-entry" onClick={() => setOpen(true)} aria-label="打开证书墙">
-            <span className="certs-fan" aria-hidden="true">
-              {certs.slice(0, 4).map((item, index) => (
-                <img
-                  key={item.id}
-                  className={`certs-fan-img fan-${index + 1}`}
-                  src={`${import.meta.env.BASE_URL}${item.img}`}
-                  alt=""
-                />
-              ))}
+          <div className="certs-rail-head">
+            <span className="certs-rail-hint">
+              左右拖动 / 滚动查看 · 共 {certs.length} 张 · 点击放大
             </span>
-            <span className="certs-entry-info">
-              <span className="certs-count">{certs.length} 张证书已存档</span>
-              <strong>
-                竞赛获奖 {awards.length} 项 · 数学建模 / 创新创业
-              </strong>
-              <span className="certs-cta">
-                查看全部证书
-                <ArrowRight size={15} strokeWidth={1.8} />
-              </span>
+            <span className="certs-rail-nav">
+              <button type="button" onClick={() => stepBy(-1)} disabled={!canPrev} aria-label="向左查看">
+                <ChevronLeft size={17} strokeWidth={1.8} />
+              </button>
+              <button type="button" onClick={() => stepBy(1)} disabled={!canNext} aria-label="向右查看">
+                <ChevronRight size={17} strokeWidth={1.8} />
+              </button>
             </span>
-          </button>
+          </div>
+          <div
+            className="certs-rail"
+            ref={railRef}
+            onScroll={syncArrows}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={endDrag}
+            onPointerLeave={endDrag}
+          >
+            {certs.map((item) => (
+              <button
+                type="button"
+                className="cert-slide"
+                key={item.id}
+                onClick={() => {
+                  if (drag.current.moved > 6) return;
+                  setZoom(item);
+                }}
+              >
+                <span className="cert-slide-frame">
+                  <img
+                    src={`${import.meta.env.BASE_URL}${item.img}`}
+                    alt={item.title}
+                    loading="lazy"
+                    draggable="false"
+                  />
+                  <span className="cert-shine" aria-hidden="true" />
+                </span>
+                <span className="cert-slide-cap">
+                  <strong>{item.title}</strong>
+                  <span>
+                    {item.org} · {item.date}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </div>
         </Reveal>
       </div>
-      {open && <CertModal onClose={() => setOpen(false)} />}
+      {zoom && <CertLightbox cert={zoom} onClose={() => setZoom(null)} onStep={stepZoom} />}
     </section>
   );
 }
@@ -1076,15 +1077,15 @@ export default function App() {
         <About />
         <Projects />
         <Strengths />
+        <Certs />
         <Notes />
-      <Certs />
       </main>
       <ContactFooter />
       <CommentsSection />
       <SiteFooterBar />
       <audio
         ref={bgmRef}
-        src={`${import.meta.env.BASE_URL}audio/intro-bgm.wav`}
+        src={`${import.meta.env.BASE_URL}audio/intro-bgm.wav?v=20261019c`}
         loop
         preload="auto"
       />

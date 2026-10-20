@@ -13,7 +13,23 @@ function ArtChrome({ left, right, children }) {
   );
 }
 
-export function MicroscopeVisual() {
+function PipelineBar({ pipeline }) {
+  if (!pipeline || pipeline.length === 0) return null;
+  return (
+    <div className="pv-pipeline" aria-label="算法流程">
+      {pipeline.map((stage, i) => (
+        <div className="pv-stage" key={stage.no} style={{ '--pv-i': i }}>
+          <span className="pv-dot" />
+          <span className="pv-stage-no">{stage.no}</span>
+          <span className="pv-stage-zh">{stage.zh}</span>
+          <span className="pv-stage-en">{stage.en}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function MicroscopeVisual({ pipeline }) {
   return (
     <ArtChrome left="IMG / 028" right="FEATURE MAP">
       <div className="micro-wrap">
@@ -66,56 +82,11 @@ export function MicroscopeVisual() {
             <text x="940" y="156">ROI.02</text>
           </g>
         </svg>
+        <PipelineBar pipeline={pipeline} />
       </div>
       <div className="art-bottomline">
         <span>MICROSCOPY / QUANTIFICATION</span>
         <span>SCALE 1.25μm</span>
-      </div>
-    </ArtChrome>
-  );
-}
-
-export function ContestVisual() {
-  return (
-    <ArtChrome left="MODEL / 2024" right="NATIONAL AWARD">
-      <div className="contest-wrap">
-        <svg viewBox="0 0 800 430" preserveAspectRatio="none" aria-hidden="true">
-          <g className="contest-axis">
-            <line x1="60" y1="42" x2="60" y2="366" />
-            <line x1="60" y1="366" x2="760" y2="366" />
-          </g>
-          <g className="contest-grid">
-            <line x1="60" y1="115" x2="760" y2="115" />
-            <line x1="60" y1="201" x2="760" y2="201" />
-            <line x1="60" y1="287" x2="760" y2="287" />
-          </g>
-          <g className="contest-line">
-            <path d="M70 342 L150 322 L230 296 L310 274 L390 226 L470 198 L550 174 L630 122 L710 84" />
-            <path
-              d="M70 342 C 150 338, 230 330, 310 302 C 390 282, 470 260, 550 216 C 630 170, 690 128, 710 84"
-              fill="none"
-            />
-          </g>
-          <g className="contest-points">
-            <circle cx="70" cy="342" r="5" />
-            <circle cx="310" cy="302" r="5" />
-            <circle cx="550" cy="216" r="5" />
-            <circle cx="710" cy="84" r="6" />
-          </g>
-          <g className="contest-labels">
-            <text x="72" y="402">预处理</text>
-            <text x="286" y="402">建模</text>
-            <text x="530" y="402">检验</text>
-            <text x="672" y="402">交付</text>
-            <text x="20" y="65">0.90</text>
-            <text x="20" y="151">0.70</text>
-            <text x="20" y="237">0.50</text>
-          </g>
-        </svg>
-      </div>
-      <div className="art-bottomline">
-        <span>PROBLEM → MODEL → VERIFY</span>
-        <span>ITERATION 08</span>
       </div>
     </ArtChrome>
   );
@@ -160,19 +131,21 @@ export function ToolkitVisual() {
   );
 }
 
-export function ProjectVisual({ type, image }) {
+export function ProjectVisual({ type, image, pipeline }) {
   if (image) {
     return (
       <div className="project-art project-art-image">
+        <div className="project-art-stage">
         <img
           className="project-art-photo"
-          src={`${import.meta.env.BASE_URL}${image.replace(/^\//, '')}?v=20260908b`}
+          src={`${import.meta.env.BASE_URL}${image.replace(/^\//, '')}?v=20261020a`}
           alt="项目截图"
         />
+        <PipelineBar pipeline={pipeline} />
+        </div>
       </div>
     );
   }
-  if (type === 'microscope') return <MicroscopeVisual />;
-  if (type === 'contest') return <ContestVisual />;
+  if (type === 'microscope') return <MicroscopeVisual pipeline={pipeline} />;
   return <ToolkitVisual />;
 }

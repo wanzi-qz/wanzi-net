@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-label="MitoSAM-Quant cover">
+  <defs>
+    <radialGradient id="mitoGlow" cx="68%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#3a2c12" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#0d0b07" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mitoBeam" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d8b46a" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#d8b46a" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="750" fill="#07090c"/>
+  <rect width="1200" height="750" fill="url(#mitoGlow)"/>
+  <g stroke="#151a20" stroke-width="1">
+    <path d="M0 150 H1200 M0 300 H1200 M0 450 H1200 M0 600 H1200"/>
+    <path d="M200 0 V750 M400 0 V750 M600 0 V750 M800 0 V750 M1000 0 V750"/>
+  </g>
+  <path d="M-50 620 L700 -60 L780 -60 L30 620 Z" fill="url(#mitoBeam)" opacity="0.5"/>
+  <g fill="none" stroke="#d8b46a" stroke-width="3" opacity="0.9">
+    <path d="M180 470 C 240 380, 330 360, 420 400 C 500 436, 540 520, 620 540"/>
+    <path d="M300 250 C 360 210, 450 214, 500 260 C 546 302, 560 372, 620 396"/>
+    <ellipse cx="820" cy="300" rx="120" ry="52" transform="rotate(-18 820 300)"/>
+    <ellipse cx="930" cy="470" rx="86" ry="40" transform="rotate(12 930 470)"/>
+  </g>
+  <g fill="none" stroke="#d8b46a" stroke-width="2" stroke-dasharray="7 7" opacity="0.55">
+    <path d="M160 480 C 226 372, 330 342, 434 386 C 512 420, 552 512, 640 552"/>
+    <path d="M284 240 C 352 194, 462 200, 516 250 C 566 296, 578 366, 640 392"/>
+    <ellipse cx="824" cy="296" rx="136" ry="66" transform="rotate(-18 824 296)"/>
+    <ellipse cx="932" cy="472" rx="100" ry="54" transform="rotate(12 932 472)"/>
+  </g>
+  <g fill="#d8b46a">
+    <circle cx="420" cy="400" r="6"/>
+    <circle cx="820" cy="300" r="6"/>
+    <circle cx="930" cy="470" r="6"/>
+  </g>
+  <g font-family="Consolas, monospace" fill="#8f9193" font-size="26" letter-spacing="4">
+    <text x="70" y="110">MITOSAM-QUANT / PIPELINE</text>
+    <text x="70" y="680">SEGMENT - FEATURES - RANDOM FOREST - INDEX</text>
+  </g>
+  <g font-family="Consolas, monospace" fill="#d8b46a" font-size="24" letter-spacing="3">
+    <text x="880" y="150">AUC 0.990</text>
+    <text x="880" y="640">INDEX 0.87</text>
+  </g>
+</svg>
