@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" font-family="'HarmonyOS Sans SC','PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101011"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a8c8e"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="620" fill="url(#bg)"/>
+  <text x="40" y="52" fill="#d8b56a" font-size="13" letter-spacing="4" font-family="Consolas,monospace">MITOSAM PIPELINE</text>
+  <text x="40" y="76" fill="#5c5e60" font-size="11" font-family="Consolas,monospace">点击式分割 · 130 维特征 · 可复现定量分析</text>
+
+  <!-- 阶段 1 -->
+  <rect x="40" y="104" width="200" height="160" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="58" y="132" fill="#f3f3f1" font-size="14" font-weight="600">超分辨显微输入</text>
+  <text x="58" y="156" fill="#9b9ea2" font-size="11">SIM / STED 图像</text>
+  <text x="58" y="177" fill="#9b9ea2" font-size="11">16-bit 动态范围</text>
+  <text x="58" y="198" fill="#9b9ea2" font-size="11">背景亮度不均</text>
+  <text x="58" y="219" fill="#9b9ea2" font-size="11">线粒体细长、低对比</text>
+  <text x="58" y="246" fill="#7c7e80" font-size="10.5" font-family="Consolas,monospace">人工勾勒 · 数十分钟/视野</text>
+
+  <line x1="240" y1="184" x2="268" y2="184" stroke="#8a8c8e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 阶段 2 -->
+  <rect x="272" y="104" width="200" height="160" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="290" y="132" fill="#f3f3f1" font-size="14" font-weight="600">预处理</text>
+  <text x="290" y="156" fill="#9b9ea2" font-size="11">去噪 / 归一化</text>
+  <text x="290" y="177" fill="#9b9ea2" font-size="11">CLAHE 对比增强</text>
+  <text x="290" y="198" fill="#9b9ea2" font-size="11">Python 调用 FIJI</text>
+  <text x="290" y="219" fill="#9b9ea2" font-size="11">批处理构建数据集</text>
+  <text x="290" y="246" fill="#7c7e80" font-size="10.5" font-family="Consolas,monospace">统一训练 / 验证口径</text>
+
+  <line x1="472" y1="184" x2="500" y2="184" stroke="#8a8c8e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 阶段 3 -->
+  <rect x="504" y="104" width="200" height="160" rx="12" fill="#121214" stroke="#d8b56a" stroke-opacity="0.6"/>
+  <text x="522" y="132" fill="#e6cf9a" font-size="14" font-weight="600">MitoSAM 分割</text>
+  <text x="522" y="156" fill="#9b9ea2" font-size="11">冻结 ViT-H 主干</text>
+  <text x="522" y="177" fill="#9b9ea2" font-size="11">ResNet-CBAM 适配器</text>
+  <text x="522" y="198" fill="#9b9ea2" font-size="11">Dice + BCE 解码器</text>
+  <text x="522" y="219" fill="#9b9ea2" font-size="11">半监督 120 视野标注</text>
+  <text x="522" y="246" fill="#d8b56a" font-size="10.5" font-family="Consolas,monospace">可训练参数 ~3% · 8GB 可跑</text>
+
+  <line x1="704" y1="184" x2="732" y2="184" stroke="#8a8c8e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 阶段 4 -->
+  <rect x="736" y="104" width="184" height="160" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="754" y="132" fill="#f3f3f1" font-size="14" font-weight="600">特征与分类</text>
+  <text x="754" y="156" fill="#9b9ea2" font-size="11">形态 28 维</text>
+  <text x="754" y="177" fill="#9b9ea2" font-size="11">纹理 46 维</text>
+  <text x="754" y="198" fill="#9b9ea2" font-size="11">空间分布 23 维</text>
+  <text x="754" y="219" fill="#9b9ea2" font-size="11">随机森林 · SHAP</text>
+  <text x="754" y="246" fill="#7c7e80" font-size="10.5" font-family="Consolas,monospace">输出连续异常指数</text>
+
+  <!-- 关键指标条 -->
+  <rect x="40" y="296" width="278" height="86" rx="10" fill="#0e0e0f" stroke="#232323"/>
+  <text x="62" y="330" fill="#d8b56a" font-size="22" font-weight="650" font-family="Consolas,monospace">Dice &gt; 0.9</text>
+  <text x="62" y="356" fill="#9b9ea2" font-size="11">单次点击分割（Otsu 基线 0.42）</text>
+
+  <rect x="341" y="296" width="278" height="86" rx="10" fill="#0e0e0f" stroke="#232323"/>
+  <text x="363" y="330" fill="#d8b56a" font-size="22" font-weight="650" font-family="Consolas,monospace">~130 维</text>
+  <text x="363" y="356" fill="#9b9ea2" font-size="11">形态 / 纹理 / 空间三类特征</text>
+
+  <rect x="642" y="296" width="278" height="86" rx="10" fill="#0e0e0f" stroke="#232323"/>
+  <text x="664" y="330" fill="#d8b56a" font-size="22" font-weight="650" font-family="Consolas,monospace">AUC 0.849</text>
+  <text x="664" y="356" fill="#9b9ea2" font-size="11">全特征集 repeated-CV 分类</text>
+
+  <!-- 结论条 -->
+  <rect x="40" y="412" width="880" height="120" rx="12" fill="#0e0e0f" stroke="#d8b56a" stroke-opacity="0.45"/>
+  <text x="64" y="444" fill="#d8b56a" font-size="12" font-family="Consolas,monospace">DELIVERY</text>
+  <text x="64" y="470" fill="#f3f3f1" font-size="14" font-weight="600">从人工看图到可复现结论：一次分析从数小时压缩到分钟级</text>
+  <text x="64" y="496" fill="#9b9ea2" font-size="12">标签置换检验观测 AUC 0.914 vs 零假设 0.515（p = 0.02）· 40 个验证样本仅 2 例误判</text>
+  <text x="64" y="518" fill="#9b9ea2" font-size="12">交付物：批量 CLI · Gradio 三标签页 GUI · ONNX 导出（解码器 ~20MB）· 一键复现全流程</text>
+
+  <!-- 底部补充 -->
+  <text x="40" y="572" fill="#5c5e60" font-size="11" font-family="Consolas,monospace">NOTE · 合成基准与真实数据（40 FOVs）指标均在 README 中如实区分</text>
+  <circle cx="905" cy="568" r="14" fill="none" stroke="#d8b56a" stroke-opacity="0.5"/>
+  <path d="M898 568 l5 5 l9 -10" fill="none" stroke="#d8b56a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

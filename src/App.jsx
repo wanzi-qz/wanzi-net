@@ -7,6 +7,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Code2,
   GraduationCap,
   Mail,
   Menu,
@@ -19,16 +20,17 @@ import {
 import {
   contacts,
   advantages,
+  casualProjects,
   education,
   heroMeta,
   intro,
   marquee,
   notes,
   profile,
-  projects,
   strengths,
 } from './data/portfolio.js';
-import { ProjectVisual } from './components/ProjectVisuals.jsx';
+import { featuredProjects } from './data/projectDetails.js';
+import ProjectDetailPage from './components/ProjectDetailPage.jsx';
 import NoteMarkdown from './components/NoteMarkdown.jsx';
 import CommentsSection from './components/CommentSection.jsx';
 import { noteSources } from './content/index.js';
@@ -154,9 +156,9 @@ function Nav() {
   const links = [
     { id: 'about', label: '关于我', no: '01' },
     { id: 'projects', label: '项目展示', no: '02' },
-    { id: 'strengths', label: '核心技能', no: '03' },
-    { id: 'certs', label: '证书荣誉', no: '04' },
-    { id: 'notes', label: '学习笔记', no: '05' },
+    { id: 'casual', label: '闲来无事', no: '03' },
+    { id: 'strengths', label: '核心技能', no: '04' },
+    { id: 'certs', label: '证书荣誉', no: '05' },
     { id: 'contact', label: '欢迎联系', no: '06' },
     { id: 'comments', label: '评论互动', no: '07' },
   ];
@@ -396,7 +398,7 @@ function About() {
       <div className="shell">
         <SectionHeading
           index="01"
-          title="关于我"
+          title="我是谁？"
           en="About"
           intro="从数学与统计进入图像算法场景，习惯用可复现的方法解决问题，并把结论交付给需要做决定的人。"
         />
@@ -493,40 +495,94 @@ function About() {
   );
 }
 
-function ProjectCard({ item, primary = false }) {
+// GitHub 品牌 Mark（lucide 新版已移除品牌图标，这里内联）
+function GithubMark({ size = 16 }) {
   return (
-    <Reveal className={primary ? 'project-card-wrap' : 'project-card-wrap compact'}>
-      <article className={`project-card ${primary ? 'project-card-primary' : 'project-card-compact'}`}>
-        <ProjectVisual type={item.visual} image={item.image} pipeline={item.pipeline} />
-        <div className="project-body">
-          <div className="project-meta">
-            <span>{item.no}</span>
-            <span>{item.period}</span>
-          </div>
-          <div className="project-title-row">
-            <h3>{item.title}</h3>
-            <ArrowUpRight size={28} strokeWidth={1.3} />
-          </div>
-          <p className="project-intro">{item.intro}</p>
-          <ul className="project-points">
-            {item.points.map((point) => (
-              <li key={point}>{point}</li>
-            ))}
-          </ul>
-          <div className="project-footer">
-            <div className="project-tags">
-              {item.tags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
-            </div>
-            <div className="project-role">
-              <small>ROLE</small>
-              <strong>{item.role}</strong>
-            </div>
-          </div>
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+    </svg>
+  );
+}
+
+// 项目卡片：参考 myportfolio-1bd 风格 —— 标题 + 简介在上，典型图左、介绍右的卡片
+function ProjectShowcaseCard({ item }) {
+  const openDetail = () => {
+    window.location.hash = `#/project/${item.id}`;
+  };
+
+  const onCardKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openDetail();
+    }
+  };
+
+  return (
+    <article className="gp-item">
+      <header className="gp-item-head">
+        <div className="gp-item-titles">
+          <span className="gp-no">
+            {item.no}
+            <i>·</i>
+            {item.period}
+            <i>·</i>
+            {item.role}
+          </span>
+          <h3>{item.title}</h3>
+          <p>{item.tagline}</p>
         </div>
-      </article>
-    </Reveal>
+        <a
+          className="gp-repo"
+          href={item.repo}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`${item.title} 的 GitHub 仓库`}
+        >
+          <GithubMark size={17} />
+          <span className="gp-repo-name">wanzi-qz/{item.id}</span>
+          <ArrowUpRight size={15} strokeWidth={1.7} />
+        </a>
+      </header>
+
+      <div
+        className="gp-card"
+        role="link"
+        tabIndex={0}
+        aria-label={`查看 ${item.title} 的项目详情`}
+        onClick={openDetail}
+        onKeyDown={onCardKeyDown}
+      >
+        <div className={`gp-media ${item.heroIsSvg ? 'is-diagram' : ''}`}>
+          <img
+            src={`${import.meta.env.BASE_URL}${item.hero}`}
+            alt={item.heroAlt}
+            loading="lazy"
+          />
+          <span className="gp-media-badge">
+            <Code2 size={13} strokeWidth={1.8} />
+            结果可视化 / RESULT
+          </span>
+        </div>
+        <div className="gp-body">
+          <h4>{item.card.heading}</h4>
+          {item.card.blocks.map((block) => (
+            <p className="gp-block" key={block.label}>
+              <strong>{block.label}</strong>
+              <span>{block.text}</span>
+            </p>
+          ))}
+          <div className="gp-tags">
+            {item.tags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+          <span className="gp-cta">
+            阅读项目详情 · 关键源码与结果图
+            <ArrowRight size={15} strokeWidth={1.8} />
+          </span>
+        </div>
+      </div>
+    </article>
   );
 }
 
@@ -538,11 +594,12 @@ function Projects() {
           index="02"
           title="项目展示"
           en="Featured Work"
-          intro="以科研图像算法项目为主线，兼顾个人工具链沉淀，展示从问题拆解到算法落地的完整路径。"
+          intro="GitHub 上的完整工程项目：点击卡片进入详情页，查看技术拆解、关键源码与结果可视化。"
         />
-        <ProjectCard item={projects[0]} primary />
-        <div className="project-grid-secondary">
-          <ProjectCard item={projects[1]} />
+        <div className="gp-list">
+          {featuredProjects.map((item) => (
+            <ProjectShowcaseCard item={item} key={item.id} />
+          ))}
         </div>
       </div>
     </section>
@@ -554,43 +611,37 @@ function Strengths() {
     <section className="section strengths" id="strengths">
       <div className="shell">
         <SectionHeading
-          index="03"
+          index="04"
           title="核心技能"
           en="Core Skills"
           intro="从图像处理、模型训练到特征工程与统计验证的完整算法能力链，均在科研项目中实际跑通。"
         />
-        <Reveal>
-          <div className="skill-field">
-            <i className="field-coord field-coord-1" aria-hidden="true">
-              +31.2304° / 121.4737°
-            </i>
-            <i className="field-coord field-coord-2" aria-hidden="true">
-              -33.8688° / 151.2093°
-            </i>
-            <i className="field-coord field-coord-3" aria-hidden="true">
-              +51.5072° / -0.1276°
-            </i>
-            <span className="field-orb" aria-hidden="true" />
-            {strengths.map((item, index) => (
-              <article key={item.no} className={`skill-node skill-node-${index + 1}`}>
-                <div className="skill-card">
-                  <div className="skill-head">
-                    <span className="skill-no">{item.no}</span>
-                    <i>/{String(index + 1).padStart(2, '0')}</i>
-                  </div>
-                  <h3>{item.title}</h3>
-                  <div className="strength-tags">
-                    {item.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                  <p>{item.desc}</p>
-                </div>
-              </article>
+      </div>
+      <Reveal>
+        <div className="skill-marquee">
+          <div className="sk-track">
+            {[0, 1].map((group) => (
+              <div className="sk-group" key={group} aria-hidden={group === 1 || undefined}>
+                {strengths.map((item, index) => (
+                  <article key={`${group}-${item.no}`} className="sk-card">
+                    <div className="sk-head">
+                      <span className="sk-no">{item.no}</span>
+                      <i>/{String(index + 1).padStart(2, '0')}</i>
+                    </div>
+                    <h3>{item.title}</h3>
+                    <div className="sk-tags">
+                      {item.tags.map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                    <p>{item.desc}</p>
+                  </article>
+                ))}
+              </div>
             ))}
           </div>
-        </Reveal>
-      </div>
+        </div>
+      </Reveal>
     </section>
   );
 }
@@ -688,53 +739,97 @@ function NoteModal({ note, onClose }) {
   );
 }
 
-function Notes() {
+function Casual() {
   const [active, setActive] = useState(null);
 
+  const openNote = (noteId) => {
+    const note = notes.find((item) => item.id === noteId);
+    if (note) setActive(note);
+  };
+
   return (
-    <section className="section notes" id="notes">
+    <section className="section casual" id="casual">
       <div className="shell">
         <SectionHeading
-          index="05"
-          title="学习笔记"
-          en="Study Notes"
-          intro="学习过程记录，每一行代码均为手敲。"
+          index="03"
+          title="闲来无事"
+          en="Side Projects & Notes"
+          intro="兴趣驱动的一些小项目与学习过程记录。"
         />
+
         <Reveal>
-          <div className="notes-tiles">
-            {notes.map((item, index) => (
-              <div key={item.no} className={`note-tile-wrap note-tile-wrap-${index + 1}`}>
+          <div className="casual-grid">
+            {casualProjects.map((item) => {
+              const isNote = Boolean(item.noteId);
+              return (
                 <article
-                  className="note-tile"
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`打开《${item.title}》笔记全文`}
-                  onClick={() => setActive(item)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault();
-                      setActive(item);
-                    }
-                  }}
+                  key={item.id}
+                  className={`casual-card ${isNote ? 'is-note' : ''}`}
+                  role={isNote ? 'button' : undefined}
+                  tabIndex={isNote ? 0 : undefined}
+                  aria-label={isNote ? `打开《${item.title}》笔记全文` : undefined}
+                  onClick={isNote ? () => openNote(item.noteId) : undefined}
+                  onKeyDown={
+                    isNote
+                      ? (event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            openNote(item.noteId);
+                          }
+                        }
+                      : undefined
+                  }
                 >
-                  <img
-                    className="note-cover"
-                    src={`${import.meta.env.BASE_URL}notes/covers/${item.id}.svg`}
-                    alt=""
-                  />
-                  <span className="note-pill">
-                    {item.no} · {item.title}
-                  </span>
-                  <div className="note-tile-foot">
-                    <span>{item.source}</span>
-                    <span className="note-tile-cta">
-                      查看完整笔记
-                      <ArrowUpRight size={14} strokeWidth={1.7} />
-                    </span>
+                  <div className="casual-card-media">
+                    <img
+                      src={`${import.meta.env.BASE_URL}${item.image}`}
+                      alt={item.imageAlt}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="casual-card-body">
+                    {item.kicker && <span className="casual-card-kicker">{item.kicker}</span>}
+                    <h3>{item.title}</h3>
+                    <p>{item.desc}</p>
+                    <div className="casual-card-tags">
+                      {item.tags.map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                    <div className="casual-card-links">
+                      {isNote ? (
+                        <span className="casual-card-note">
+                          阅读完整笔记
+                          <ArrowUpRight size={13} strokeWidth={1.7} />
+                        </span>
+                      ) : (
+                        <>
+                          {item.repo && (
+                            <a href={item.repo} target="_blank" rel="noreferrer">
+                              <GithubMark />
+                              GitHub 仓库
+                              <ArrowUpRight size={13} strokeWidth={1.7} />
+                            </a>
+                          )}
+                          {item.demo && (
+                            <a href={item.demo} target="_blank" rel="noreferrer">
+                              在线体验
+                              <ArrowUpRight size={13} strokeWidth={1.7} />
+                            </a>
+                          )}
+                          {item.paper && (
+                            <a href={item.paper} target="_blank" rel="noreferrer">
+                              论文原文
+                              <ArrowUpRight size={13} strokeWidth={1.7} />
+                            </a>
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
                 </article>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Reveal>
       </div>
@@ -830,7 +925,7 @@ function Certs() {
     <section className="section certs" id="certs">
       <div className="shell">
         <SectionHeading
-          index="04"
+          index="05"
           title="证书荣誉"
           en="Certificates"
           intro="也曾得过一些奖"
@@ -1002,16 +1097,45 @@ function SiteFooterBar() {
   );
 }
 
+// ---- 简易 hash 路由：#/project/<id> 打开项目详情页，其余 hash 仍为站内锚点 ----
+function parseProjectRoute() {
+  const match = window.location.hash.match(/^#\/project\/([\w-]+)/);
+  return match ? match[1] : null;
+}
+
 export default function App() {
   const [deepLink] = useState(
     () => typeof window !== 'undefined' && window.location.hash.length > 1,
   );
   const [entered, setEntered] = useState(deepLink);
   const [gateGone, setGateGone] = useState(deepLink);
+  const [projectRoute, setProjectRoute] = useState(parseProjectRoute);
   const bgmRef = useRef(null);
   const [bgmOn, setBgmOn] = useState(false);
   const bgmStarted = useRef(false);
   const prevEntered = useRef(entered);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      const next = parseProjectRoute();
+      setProjectRoute(next);
+      if (!next) {
+        // 从详情页返回主站：滚回对应锚点（如 #projects）
+        const id = window.location.hash.replace(/^#/, '');
+        requestAnimationFrame(() => {
+          const target = id ? document.getElementById(id) : null;
+          if (target) target.scrollIntoView({ block: 'start' });
+          else window.scrollTo(0, 0);
+        });
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  const backToProjects = () => {
+    window.location.hash = '#projects';
+  };
 
   useEffect(() => {
     const was = prevEntered.current;
@@ -1061,6 +1185,24 @@ export default function App() {
     document.documentElement.style.scrollBehavior = previous;
   }, [deepLink]);
 
+  // 项目详情页：独立文章式布局，不渲染主站各区块
+  if (projectRoute) {
+    return (
+      <>
+        <ProjectDetailPage projectId={projectRoute} onBack={backToProjects} />
+        <button
+          type="button"
+          className={`bgm-toggle ${bgmOn ? 'is-on' : ''}`}
+          onClick={toggleBgm}
+          aria-label={bgmOn ? '暂停背景音乐' : '播放背景音乐'}
+          title={bgmOn ? '暂停背景音乐' : '播放背景音乐'}
+        >
+          {bgmOn ? <Volume2 size={18} strokeWidth={1.7} /> : <VolumeX size={18} strokeWidth={1.7} />}
+        </button>
+      </>
+    );
+  }
+
   return (
     <>
       {!gateGone && (
@@ -1076,9 +1218,9 @@ export default function App() {
         <MarqueeBand />
         <About />
         <Projects />
+        <Casual />
         <Strengths />
         <Certs />
-        <Notes />
       </main>
       <ContactFooter />
       <CommentsSection />

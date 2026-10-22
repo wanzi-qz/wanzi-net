@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" font-family="'HarmonyOS Sans SC','PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101011"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a8c8e"/>
+    </marker>
+    <marker id="arrow-gold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d8b56a"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="620" fill="url(#bg)"/>
+  <text x="40" y="52" fill="#d8b56a" font-size="13" letter-spacing="4" font-family="Consolas,monospace">LOW-LIGHT VIDEO PIPELINE</text>
+  <text x="40" y="76" fill="#5c5e60" font-size="11" font-family="Consolas,monospace">受控实验 · 每阶段先写验收线 · 负结果入册</text>
+
+  <!-- 阶段 1：合成 -->
+  <rect x="40" y="104" width="260" height="140" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="60" y="134" fill="#f3f3f1" font-size="15" font-weight="600">物理低光合成</text>
+  <text x="60" y="158" fill="#9b9ea2" font-size="12">DAVIS-2017 正常曝光视频</text>
+  <text x="60" y="180" fill="#9b9ea2" font-size="12">sRGB → 线性 → Poisson 散粒噪声</text>
+  <text x="60" y="202" fill="#9b9ea2" font-size="12">+ 读出噪声 + 增益 + JPEG</text>
+  <text x="60" y="228" fill="#d8b56a" font-size="11" font-family="Consolas,monospace">EV=2.5 · 序列级划分防泄漏</text>
+
+  <line x1="300" y1="174" x2="348" y2="174" stroke="#8a8c8e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 阶段 2：基线 -->
+  <rect x="352" y="104" width="260" height="140" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="372" y="134" fill="#f3f3f1" font-size="15" font-weight="600">B1 · 逐帧 U-Net</text>
+  <text x="372" y="158" fill="#9b9ea2" font-size="12">1.95M 参数 · gain/residual 双头</text>
+  <text x="372" y="180" fill="#9b9ea2" font-size="12">PSNR 14.88 → 24.83 (+9.9dB)</text>
+  <text x="372" y="202" fill="#9b9ea2" font-size="12">保真度领先，但闪烁仍被放大</text>
+  <text x="372" y="228" fill="#d8b56a" font-size="11" font-family="Consolas,monospace">tOF 1.458（越低越稳）</text>
+
+  <line x1="612" y1="174" x2="660" y2="174" stroke="#8a8c8e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 阶段 3：评估 -->
+  <rect x="664" y="104" width="256" height="140" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="684" y="134" fill="#f3f3f1" font-size="15" font-weight="600">双指标评估</text>
+  <text x="684" y="158" fill="#9b9ea2" font-size="12">PSNR / SSIM · 保真度</text>
+  <text x="684" y="180" fill="#9b9ea2" font-size="12">tOF · 时序稳定性</text>
+  <text x="684" y="202" fill="#9b9ea2" font-size="12">光流固定在 GT 帧上防作弊</text>
+  <text x="684" y="228" fill="#d8b56a" font-size="11" font-family="Consolas,monospace">置换对照 · shuffled tOF 32.08</text>
+
+  <!-- 三条路线 -->
+  <line x1="482" y1="244" x2="482" y2="278" stroke="#8a8c8e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="494" y="268" fill="#5c5e60" font-size="11" font-family="Consolas,monospace">三条时序路线</text>
+
+  <rect x="40" y="284" width="280" height="150" rx="12" fill="#121214" stroke="#d8b56a" stroke-opacity="0.6"/>
+  <text x="60" y="314" fill="#e6cf9a" font-size="14" font-weight="600">T1 · 光流 warp 融合 ✓</text>
+  <text x="60" y="338" fill="#9b9ea2" font-size="12">训练无关后处理 · 遮挡感知加权</text>
+  <text x="60" y="360" fill="#9b9ea2" font-size="12">多帧降噪：方差 ~ 1/N</text>
+  <text x="60" y="388" fill="#d8b56a" font-size="11" font-family="Consolas,monospace">tOF 28.20 → 24.95 (−12.3%)</text>
+  <text x="60" y="410" fill="#7c7e80" font-size="11" font-family="Consolas,monospace">当前最优组合成分</text>
+
+  <rect x="340" y="284" width="280" height="150" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="360" y="314" fill="#f3f3f1" font-size="14" font-weight="600">T2 · warp 一致性损失 ✗</text>
+  <text x="360" y="338" fill="#9b9ea2" font-size="12">训练期时序约束（λ=3）</text>
+  <text x="360" y="360" fill="#9b9ea2" font-size="12">梯度占比 1.3% → 被主损失淹没</text>
+  <text x="360" y="388" fill="#7c7e80" font-size="11" font-family="Consolas,monospace">负结果：指标与 B1 持平</text>
+  <text x="360" y="410" fill="#7c7e80" font-size="11" font-family="Consolas,monospace">第一轮 λ=0.3 无效 · 过程留档</text>
+
+  <rect x="640" y="284" width="280" height="150" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="660" y="314" fill="#f3f3f1" font-size="14" font-weight="600">T3 · 循环传播 ✗</text>
+  <text x="660" y="338" fill="#9b9ea2" font-size="12">瓶颈 ConvGRU · BasicVSR 思路</text>
+  <text x="660" y="360" fill="#9b9ea2" font-size="12">两条证据链完整 · 收益仅 ~2%</text>
+  <text x="660" y="388" fill="#7c7e80" font-size="11" font-family="Consolas,monospace">负结果：PSNR 反降 0.5dB</text>
+  <text x="660" y="410" fill="#7c7e80" font-size="11" font-family="Consolas,monospace">循环收益不抵逐帧误差</text>
+
+  <!-- 汇聚到结论 -->
+  <line x1="180" y1="434" x2="180" y2="466" stroke="#d8b56a" stroke-opacity="0.6" stroke-width="1.5" marker-end="url(#arrow-gold)"/>
+  <line x1="480" y1="434" x2="480" y2="466" stroke="#8a8c8e" stroke-width="1.5"/>
+  <line x1="780" y1="434" x2="780" y2="466" stroke="#8a8c8e" stroke-width="1.5"/>
+
+  <rect x="40" y="472" width="880" height="108" rx="12" fill="#0e0e0f" stroke="#d8b56a" stroke-opacity="0.45"/>
+  <text x="64" y="504" fill="#d8b56a" font-size="12" font-family="Consolas,monospace">CONCLUSION</text>
+  <text x="64" y="530" fill="#f3f3f1" font-size="14" font-weight="600">最优组合 B1+T2+T1：PSNR 25.32 · SSIM 0.855 · tOF/tOF_in 1.271</text>
+  <text x="64" y="556" fill="#9b9ea2" font-size="12">核心发现：tOF 的残差大头是内容相关的模型误差，不是噪声抖动 —— 时序一致性的收益边界由逐帧误差决定</text>
+</svg>

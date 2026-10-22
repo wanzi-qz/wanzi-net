@@ -3,7 +3,7 @@ export const profile = {
   nameEn: 'WANG JIARUI',
   role: '算法工程师',
   roleEn: 'Algorithm Engineer',
-  introLead: '用算法把复杂图像，变成可验证的结论。',
+  introLead: '万事万物，皆可定量分析。',
   introParagraphs: [
     '数学与应用数学本科，控制工程图像算法方向硕士。围绕高噪声显微图像完成预处理、分割、特征提取与统计建模的全流程实现，习惯从问题出发，把算法为什么有效讲成可复现、可验证的结论。',
     '数理基础扎实，逻辑思维清晰，能用 PyTorch 独立搭建并训练模型；学习速度快，新技术栈以周为单位从入门走到落地，也熟悉 Prompt Engineering 与 Agent，把重复流程沉淀为可复用工具。',
@@ -50,7 +50,7 @@ export const advantages = [
   {
     title: '数理统计科班 + 图像算法硕士',
     desc:
-      '电子科技大学数学（应用统计方向）本科、华南师范大学控制工程硕士，概率统计、假设检验、回归与聚类基础扎实；3 次以队长身份参加数学建模竞赛并全部获奖。',
+      '电子科技大学数学统计学本科、华南师范大学控制工程硕士，概率统计、假设检验、回归与聚类基础扎实；多次以队长身份参加数学建模竞赛并全部获奖。',
   },
   {
     title: '独立完成图像算法全流程',
@@ -65,7 +65,7 @@ export const advantages = [
   {
     title: '快速学习与逻辑推演',
     desc:
-      '新技术栈从入门到落地以周为单位推进，自学 Python 生态、SQL 与深度学习框架并整理成可检索笔记；擅长把复杂问题拆解为可验证的步骤与结论。',
+      '新技术栈从入门到落地以周为单位推进，自学完成项目并整理成可检索笔记；擅长把复杂问题拆解为可验证的步骤与结论。',
   },
 ];
 
@@ -95,7 +95,7 @@ export const education = [
     school: '电子科技大学',
     degree: '本科',
     major: '数学与应用数学',
-    direction: '应用统计方向',
+    direction: '统计学方向',
     period: '2017.09 — 2021.07',
     note: '建立数理与统计方法基础',
   },
@@ -199,7 +199,7 @@ export const notes = [
     title: '数据处理与报表实现',
     source: 'OBSIDIAN / 学习笔记',
     summary:
-      '把一套业务报表从指标口径到可视化完整实现了一遍：先理清指标定义，再用函数与透视完成取数和聚合，最后做成一份能筛选、能直接看的周报。',
+      '把业务报表从指标口径到可视化完整实现了一遍：先理清指标定义，再用函数与透视完成取数和聚合，最后做成一份能筛选、能直接看的周报。',
     points: [
       '指标口径：GMV、UV / PV、CPC、到手率、进店与下单转化率',
       '透视表 + 切片器 + 透视图，实现跨表联动筛选',
@@ -247,19 +247,62 @@ export const notes = [
       },
     ],
   },
+];
+// 「闲来无事」板块：兴趣向小项目 + 学习笔记，统一按两列卡片呈现
+export const casualProjects = [
   {
-    no: 'N.03',
-    id: 'mito-algo',
-    title: '线粒体图像算法四阶段拆解 · 从显微图像到异常指数',
-    source: 'THESIS / 方法笔记',
-    summary:
-      '把毕业论文的全流程方法整理成一份可复现笔记：图像处理、实例分割、多维特征、随机森林定量评估，每一阶段都记下做法、关键参数与踩过的坑。',
-    points: [
-      '预处理：去噪 / 归一化 / CLAHE 对比增强，Python 调用 FIJI 批处理，统一训练与验证集口径',
-      '分割：SAM 改进为 MitoSAM —— ViT 主干深度扩展、局部-全局混合注意力、门控注意力，半监督仅 120 视野 / 2045 个标注',
-      '特征：形态 / 纹理（GLCM、LBP）/ 空间（Ripley\'s K、Voronoi）三大类共 174 维，随机森林重要性筛出 30 个关键特征',
-      '评估：200 棵决策树投票输出连续异常指数，40 个验证样本仅 2 例误判，AUC 0.971–0.990，SHAP 给出可解释性',
-    ],
-    links: [],
+    id: 'myimg',
+    title: 'myimg · 图像算子对拍工作台',
+    desc: 'NumPy 高斯 / Otsu / Canny / 形态学等常用算子，逐个与 OpenCV、scikit-image 对拍，把误差、耗时、差异原因全部记录归因。附 PyQt GUI 工具箱、Streamlit 在线对拍台与 exe 打包版本。',
+    image: 'projects/github/myimg-card.webp',
+    imageAlt: 'myimg GUI 对拍台截图：Canny 边缘对比与统计面板',
+    tags: ['NumPy', 'PyQt', 'Streamlit', '对拍测试'],
+    repo: 'https://github.com/wanzi-qz/wanzi-myimg',
+    demo: 'https://wanzi-myimg.streamlit.app/',
+  },
+  {
+    id: 'mefhdr',
+    title: 'mefhdr · 多曝光融合 HDR 链路',
+    desc: 'Training-free 的多曝光 HDR 融合管线：MTB 对齐抗鬼影、Mertens 三权重图、拉普拉斯金字塔融合。在 Kalantari 15 场景上零调参评测，并诚实记录传统方法的适用边界与失败案例。',
+    image: 'projects/github/mefhdr-card.webp',
+    imageAlt: 'EV-2 / EV0 / EV+2 三档曝光与 HDR 融合结果对比',
+    tags: ['HDR', 'MTB 对齐', '金字塔融合', 'Python'],
+    repo: 'https://github.com/wanzi-qz/wanzi-mefhdr',
+    demo: null,
+  },
+  {
+    id: 'yolo-world',
+    title: 'YOLO-World · 开放词汇检测系统',
+    desc: '复现 YOLO-World（CVPR 2024）开放词汇目标检测：基于 ultralytics + CLIP 文本编码器，用 PyQt5 从零搭建桌面系统——自定义提示词在线换类、图片 / 视频双通道检测、CUDA 加速与多档 worldv2 模型热切换。',
+    image: 'projects/github/yolo-world-gui.webp',
+    imageAlt: 'YOLO-World 开放词汇检测系统 GUI：输入 person、blue bus 提示词的检测结果',
+    tags: ['YOLO-World', '开放词汇检测', 'PyQt5', 'CLIP'],
+    repo: null,
+    demo: null,
+    paper: 'https://arxiv.org/abs/2401.17270',
+  },
+  {
+    id: 'note-excel',
+    noteId: 'excel',
+    kicker: 'N.01',
+    title: '数据处理与报表实现',
+    desc: '把业务报表从指标口径到可视化完整实现了一遍：先理清指标定义，再用函数与透视完成取数和聚合，最后做成一份能筛选、能直接看的周报。',
+    image: 'notes/covers/excel.svg',
+    imageAlt: '数据处理与报表实现笔记封面',
+    tags: ['Excel', '数据透视表', '指标体系', '报表自动化'],
+    repo: null,
+    demo: null,
+  },
+  {
+    id: 'note-sql',
+    noteId: 'sql',
+    kicker: 'N.02',
+    title: 'SQL 从查询到窗口函数 · 牛客 42 题',
+    desc: '从单表查询走到多表连接、子查询与窗口函数，理清书写顺序与真实运行顺序的差别；再在牛客把 SQL1–SQL42 刷完，每题都记下思路与踩过的坑。',
+    image: 'notes/covers/sql.svg',
+    imageAlt: 'SQL 从查询到窗口函数笔记封面',
+    tags: ['SQL', '窗口函数', '多表连接', '牛客 42 题'],
+    repo: null,
+    demo: null,
   },
 ];

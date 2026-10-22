@@ -9,6 +9,17 @@ const TOKEN_KEY = 'wjy_comment_tokens';
 const LIKE_KEY = 'wjy_comment_likes';
 const ADMIN_KEY = 'wjy_comment_admin';
 
+// 本地预览（vite dev / preview）不运行 Cloudflare Pages Functions，
+// /api/* 会被 SPA fallback 兜底成 index.html —— 显式识别并给出友好提示，
+// 线上（www.wanzi.me）返回 JSON，不受影响。
+async function readJson(res) {
+  const type = res.headers.get('content-type') || '';
+  if (!type.includes('application/json')) {
+    throw new Error('评论服务仅在 Cloudflare Pages 线上环境可用，本地预览不包含后端函数');
+  }
+  return res.json();
+}
+
 function loadJson(key, fallback) {
   try {
     const raw = window.localStorage.getItem(key);
@@ -149,7 +160,7 @@ export default function CommentsSection() {
     setStatus('loading');
     try {
       const res = await fetch(`${API}?page=${target}&size=${size}`);
-      const data = await res.json();
+      const data = await readJson(res);
       if (!data.ok) throw new Error(data.error || res.status);
       setComments(Array.isArray(data.comments) ? data.comments : []);
       setPage(data.page || 1);
@@ -197,7 +208,7 @@ export default function CommentsSection() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    const data = await res.json();
+    const data = await readJson(res);
     if (!data.ok) throw new Error(data.error || res.status);
     return data;
   }, []);
@@ -302,7 +313,7 @@ export default function CommentsSection() {
     if (adminOn && adminKey) headers['x-admin-key'] = adminKey;
     try {
       const res = await fetch(`${API}?id=${encodeURIComponent(id)}`, { method: 'DELETE', headers });
-      const data = await res.json();
+      const data = await readJson(res);
       if (!data.ok) throw new Error(data.error || res.status);
       await fetchList(page, pageSize);
       toast('已删除');
@@ -469,7 +480,7 @@ export default function CommentsSection() {
             {status === 'loading' && <p className="comments-state">评论加载中…</p>}
             {status === 'error' && (
               <p className="comments-state comments-state-error">
-                评论加载失败：{errorMsg}
+                {errorMsg.includes('本地预览') ? `ℹ️ ${errorMsg}` : `评论加载失败：${errorMsg}`}
                 <button type="button" onClick={() => fetchList(page, pageSize)}>
                   重试
                 </button>

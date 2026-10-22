@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" font-family="'HarmonyOS Sans SC','PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101011"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d8b56a"/>
+      <stop offset="1" stop-color="#b98f3e"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a8c8e"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="620" fill="url(#bg)"/>
+  <text x="40" y="52" fill="#d8b56a" font-size="13" letter-spacing="4" font-family="Consolas,monospace">INDUVISION PIPELINE</text>
+  <text x="40" y="76" fill="#5c5e60" font-size="11" font-family="Consolas,monospace">MVTec AD · YOLOv8-seg · ONNX · TensorRT</text>
+
+  <!-- 阶段 1：数据 -->
+  <rect x="40" y="110" width="250" height="150" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="60" y="140" fill="#f3f3f1" font-size="16" font-weight="600">MVTec AD 数据</text>
+  <text x="60" y="166" fill="#9b9ea2" font-size="12">15 类工业品 · 5354 张图</text>
+  <text x="60" y="188" fill="#9b9ea2" font-size="12">sha256 校验 · 硬链接落盘</text>
+  <text x="60" y="210" fill="#7c7e80" font-size="12">MVTec → YOLO-seg 转换 + 单测</text>
+  <text x="60" y="238" fill="#d8b56a" font-size="11" font-family="Consolas,monospace">W1a ✓</text>
+
+  <line x1="290" y1="185" x2="340" y2="185" stroke="#8a8c8e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 阶段 2：训练 -->
+  <rect x="345" y="110" width="250" height="150" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="365" y="140" fill="#f3f3f1" font-size="16" font-weight="600">YOLOv8-seg 训练</text>
+  <text x="365" y="166" fill="#9b9ea2" font-size="12">基线 mask mAP50-95 0.2453</text>
+  <text x="365" y="188" fill="#9b9ea2" font-size="12">Copy-Paste 缺陷合成</text>
+  <text x="365" y="210" fill="#9b9ea2" font-size="12">Focal Loss 消融（负收益）</text>
+  <text x="365" y="238" fill="#d8b56a" font-size="11" font-family="Consolas,monospace">0.2453 → 0.4071 (+66%)</text>
+
+  <line x1="595" y1="185" x2="645" y2="185" stroke="#8a8c8e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 阶段 3：导出 -->
+  <rect x="650" y="110" width="270" height="150" rx="12" fill="#121214" stroke="#2c2c2e"/>
+  <text x="670" y="140" fill="#f3f3f1" font-size="16" font-weight="600">ONNX 导出</text>
+  <text x="670" y="166" fill="#9b9ea2" font-size="12">trtexec 三档量化</text>
+  <rect x="670" y="184" width="52" height="24" rx="5" fill="rgba(216,181,106,0.12)" stroke="#d8b56a"/>
+  <text x="678" y="200" fill="#e6cf9a" font-size="11" font-family="Consolas,monospace">FP32</text>
+  <rect x="730" y="184" width="52" height="24" rx="5" fill="rgba(216,181,106,0.12)" stroke="#d8b56a"/>
+  <text x="738" y="200" fill="#e6cf9a" font-size="11" font-family="Consolas,monospace">FP16</text>
+  <rect x="790" y="184" width="52" height="24" rx="5" fill="rgba(216,181,106,0.12)" stroke="#d8b56a"/>
+  <text x="798" y="200" fill="#e6cf9a" font-size="11" font-family="Consolas,monospace">INT8</text>
+  <text x="670" y="238" fill="#d8b56a" font-size="11" font-family="Consolas,monospace">INT8 熵校准</text>
+
+  <!-- 连接到底部部署 -->
+  <path d="M 785 260 L 785 330 L 640 330" fill="none" stroke="#8a8c8e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 部署服务 -->
+  <rect x="330" y="270" width="310" height="190" rx="12" fill="#121214" stroke="#d8b56a" stroke-opacity="0.55"/>
+  <text x="350" y="300" fill="#f3f3f1" font-size="16" font-weight="600">TensorRT C++ 推理服务</text>
+  <text x="350" y="326" fill="#9b9ea2" font-size="12">零拷贝 GPU 内存流水线</text>
+  <text x="350" y="348" fill="#9b9ea2" font-size="12">三线程：预处理 / 推理 / 后处理</text>
+  <text x="350" y="370" fill="#9b9ea2" font-size="12">端到端压测 · 精度-速度-显存对照</text>
+  <rect x="350" y="392" width="270" height="1" fill="#232323"/>
+  <text x="350" y="418" fill="#7c7e80" font-size="11" font-family="Consolas,monospace">RTX 4060 Laptop 8GB · Win11</text>
+  <text x="350" y="440" fill="#7c7e80" font-size="11" font-family="Consolas,monospace">所有数字本机实测 · 未跑标「待测」</text>
+
+  <!-- 底部工程素养条 -->
+  <rect x="40" y="500" width="880" height="80" rx="12" fill="#0e0e0f" stroke="#232323"/>
+  <text x="64" y="532" fill="#d8b56a" font-size="12" font-family="Consolas,monospace">ENGINEERING</text>
+  <text x="64" y="556" fill="#9b9ea2" font-size="12">核心库仅依赖 numpy / opencv / pyyaml · 228 条 pytest 纯 CPU 可跑 · GitHub Actions 双系统 × 双版本矩阵</text>
+  <circle cx="905" cy="540" r="16" fill="none" stroke="#d8b56a" stroke-opacity="0.5"/>
+  <path d="M897 540 l6 6 l11 -12" fill="none" stroke="#d8b56a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
